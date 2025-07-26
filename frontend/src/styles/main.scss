@@ -1,0 +1,29 @@
+.main {
+  h2 {
+    font-weight: bold;
+    font-size: 40px;
+    color: #0d2a6f;
+  }
+  .filter {
+    margin-bottom: 140px;
+    .btn {
+      width: 100px;
+    }
+    .btn.active {
+      background-color: #6c757d;
+      color: white;
+    }
+  }
+  .chart-box {
+    width:500px;
+    .chart-title {
+      text-align: center;
+      font-weight: bold;
+      margin-top: 15px;
+      font-size: 28px;
+      color: #290661;
+    }
+  }
+}
+
+

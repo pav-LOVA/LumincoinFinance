@@ -1,0 +1,41 @@
+.auth {
+  max-width: 400px;
+  margin: 50px auto;
+  text-align: center;
+  .logo {
+    width: 180px;
+  }
+  h2 {
+    font-size: 40px;
+    color: #052C65;
+  }
+  form {
+    .form-group {
+      position: relative;
+      input {
+        padding-left: 40px;
+      }
+      .form-control-icon {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6c757d;
+        font-size: 16px;
+
+      }
+      .form-control::placeholder {
+        color: #6C757D;
+      }
+    }
+    .small-link{
+      font-size: 12px;
+      .forLogin {
+        text-align: left;
+      }
+    }
+
+  }
+}
+
+

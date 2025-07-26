@@ -1,0 +1,90 @@
+<div class="list list-container">
+    <h2 class="mb-5">Расходы</h2>
+
+    <div class="card-items">
+        <div class="card-item border border-secondary-subtle rounded-2">
+            <div class="card-title">Еда</div>
+            <div class="mt-2">
+                <a href="/expenses/edit?id=" class="btn btn-primary btn-sm btn-edit me-1">Редактировать</a>
+                <button class="btn btn-danger btn-sm" id="delete">Удалить</button>
+            </div>
+        </div>
+
+        <div class="card-item border border-secondary-subtle rounded-2">
+            <div class="card-title">Жильё</div>
+            <div class="mt-2">
+                <a href="/expenses/edit" class="btn btn-primary btn-sm btn-edit me-1">Редактировать</a>
+                <button class="btn btn-danger btn-sm">Удалить</button>
+            </div>
+        </div>
+
+        <div class="card-item border border-secondary-subtle rounded-2">
+            <div class="card-title">Здоровье</div>
+            <div class="mt-2">
+                <a href="/expenses/edit" class="btn btn-primary btn-sm btn-edit me-1">Редактировать</a>
+                <button class="btn btn-danger btn-sm">Удалить</button>
+            </div>
+        </div>
+
+        <div class="card-item border border-secondary-subtle rounded-2">
+            <div class="card-title">Кафе</div>
+            <div class="mt-2">
+                <a href="/expenses/edit" class="btn btn-primary btn-sm btn-edit me-1">Редактировать</a>
+                <button class="btn btn-danger btn-sm">Удалить</button>
+            </div>
+        </div>
+
+        <div class="card-item border border-secondary-subtle rounded-2">
+            <div class="card-title">Авто</div>
+            <div class="mt-2">
+                <a href="/expenses/edit" class="btn btn-primary btn-sm btn-edit me-1">Редактировать</a>
+                <button class="btn btn-danger btn-sm">Удалить</button>
+            </div>
+        </div>
+
+        <div class="card-item border border-secondary-subtle rounded-2">
+            <div class="card-title">Одежда</div>
+            <div class="mt-2">
+                <a href="/expenses/edit" class="btn btn-primary btn-sm btn-edit me-1">Редактировать</a>
+                <button class="btn btn-danger btn-sm">Удалить</button>
+            </div>
+        </div>
+
+        <div class="card-item border border-secondary-subtle rounded-2">
+            <div class="card-title">Развлечения</div>
+            <div class="mt-2">
+                <a href="/expenses/edit" class="btn btn-primary btn-sm btn-edit me-1">Редактировать</a>
+                <button class="btn btn-danger btn-sm">Удалить</button>
+            </div>
+        </div>
+
+        <div class="card-item border border-secondary-subtle rounded-2">
+            <div class="card-title">Счета</div>
+            <div class="mt-2">
+                <a href="/expenses/edit" class="btn btn-primary btn-sm btn-edit me-1">Редактировать</a>
+                <button class="btn btn-danger btn-sm">Удалить</button>
+            </div>
+        </div>
+
+        <div class="card-item border border-secondary-subtle rounded-2">
+            <div class="card-title">Спорт</div>
+            <div class="mt-2">
+                <a href="/expenses/edit" class="btn btn-primary btn-sm btn-edit me-1">Редактировать</a>
+                <button class="btn btn-danger btn-sm">Удалить</button>
+            </div>
+        </div>
+
+        <a href="/expenses/create" class="card-item card-add border border-secondary-subtle rounded-2">
+            <span>+</span>
+        </a>
+    </div>
+</div>
+
+<div class="popUp text-center" id="popUp">
+    <div class="popUp-msg rounded-2">
+        <p>Вы действительно хотите удалить категорию?
+        </p>
+        <button type="button" class="btn btn-success me-2">Да, удалить</button>
+        <button type="button" class="btn btn-danger" id="nonDelete">Не удалять</button>
+    </div>
+</div>

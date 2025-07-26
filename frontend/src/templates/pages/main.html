@@ -1,0 +1,32 @@
+<div class="main">
+    <h2 class="mb-5">Главная</h2>
+
+    <div class="filter">
+        <button type="button" class="btn btn-secondary active me-3">Сегодня</button>
+        <button type="button" class="btn btn-outline-secondary me-3">Неделя</button>
+        <button type="button" class="btn btn-outline-secondary me-3">Месяц</button>
+        <button type="button" class="btn btn-outline-secondary me-3">Год</button>
+        <button type="button" class="btn btn-outline-secondary me-3">Все</button>
+        <button type="button" class="btn btn-outline-secondary me-3">Интервал</button>
+        <span><b>с</b> <a href="javascript:void(0)" class="text-body-secondary link-underline-secondary ms-3 me-3">Дата</a> <b>по</b> <a href="javascript:void(0)" class="text-body-secondary link-underline-secondary ms-3 me-3">Дата</a></span>
+    </div>
+
+    <div class="row">
+        <div class="col-md-5 mb-4">
+            <div class="chart-box">
+                <div class="chart-title mb-2">Доходы</div>
+                <canvas id="incomeChart"></canvas>
+            </div>
+        </div>
+        <div class="col-md-1 border-start border-secondary-subtle">
+        </div>
+<!--        <div class="col-md-1">-->
+<!--        </div>-->
+        <div class="col-md-6 mb-4">
+            <div class="chart-box">
+                <div class="chart-title mb-2">Расходы</div>
+                <canvas id="expenseChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
