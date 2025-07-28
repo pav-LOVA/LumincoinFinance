@@ -54,15 +54,11 @@ body {
       .nav-item {
         width: 200px;
         height: 40px;
-        a {
+        a, button {
           color: #052C65;
-          &:hover {
+          &:hover, &:focus {background: #0D6EFD;
           color: white;
           }
-        }
-        &:hover {
-          background: #0D6EFD;
-          color: white;
         }
         .btn {
           display: flex;
@@ -89,7 +85,7 @@ body {
               }
             }
           }
-          &:focus {
+          &:hover {
             border-bottom-left-radius: 50%;
             border-bottom-right-radius: 50%;
           }
@@ -102,6 +98,9 @@ body {
         padding-bottom: 20px;
         border-bottom: 1px solid #D9D9D9;
         font-weight: 600;
+        .balance {
+          color: #0D6EFD;
+        }
       }
       .user-info {
         display: flex;
@@ -110,17 +109,44 @@ body {
         gap: 15px;
         padding-left: 20px;
         margin-top: 20px;
+        i {
+          color: #D9D9D9;
+        }
+        a{
+          color: #052C65;
+        }
+        .dropdown {
+          .show{
+            width: 100%;
+            text-align: center;
+          }
+          .btn {
+            border: none;
+            &:hover {
+              color: rgb(186, 186, 186);
+            }
+          }
+          .dropdown-menu {
+            padding: 0;
+            border: 1px solid rgb(186, 186, 186);
+            background: white;
+            color: rgb(186, 186, 186);
+            .dropdown-item {
+              padding: 0;
+              color: rgb(186, 186, 186);
+              &:hover {
+                background: rgb(186, 186, 186);
+                color: white;
+              }
+            }
+          }
+        }
       }
-      i {
-        color: #D9D9D9;
-      }
-      a{
-        color: #052C65;
-      }
+
     }
   }
   .content {
-    margin-left: 250px;
-    padding: 20px;
+    margin-left: 200px;
+    padding: 60px;
   }
 }

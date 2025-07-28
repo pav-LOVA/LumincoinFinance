@@ -14,14 +14,23 @@
       color: white;
     }
   }
-  .chart-box {
-    width:500px;
-    .chart-title {
-      text-align: center;
-      font-weight: bold;
-      margin-top: 15px;
-      font-size: 28px;
-      color: #290661;
+  .chart {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    .line {
+      border-right: 1px solid #D9D9D9;
+    }
+    .chart-box {
+      width:500px;
+      .chart-title {
+        text-align: center;
+        font-weight: bold;
+        margin-top: 15px;
+        font-size: 28px;
+        color: #290661;
+      }
     }
   }
 }

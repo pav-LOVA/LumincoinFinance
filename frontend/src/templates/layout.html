@@ -18,7 +18,7 @@
 
                 <li class="nav-item mb-2 rounded-2">
                     <div class="dropdown">
-                        <button class="btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <button class="btn w-100" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <p class="list">Категории</p>
                             <i class="right fas fa-chevron-right"></i>
                         </button>
@@ -36,8 +36,15 @@
                 <p>Баланс: <a href="javascript:void(0)" id="balance">500$</a></p>
             </div>
             <div class="user-info">
-                <i class="fa-solid fa-2x fa-circle-user " id="user-icon"></i>
-                <a href="">Roman Chernov</a>
+                <div class="dropdown">
+                    <button class="btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-2x fa-circle-user " id="user-icon"></i>
+                    </button>
+                    <ul class="dropdown-menu w-100">
+                        <li><a href="/login" class="dropdown-item rounded-top-2"><p>Выход</p></a></li>
+                    </ul>
+                </div>
+                <p>Roman Chernov</p>
             </div>
         </div>
     </div>

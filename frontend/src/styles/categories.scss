@@ -1,6 +1,4 @@
 .list-container {
-  padding: 60px;
-
   h2 {
     font-weight: bold;
     font-size: 40px;
@@ -85,7 +83,7 @@
   }
 
   form {
-    input {
+    input, select, textarea {
       width: 397px;
     }
 
@@ -119,8 +117,6 @@
     .icon {
       text-align: right;
     }
-
-    font-weight: bold;
 
     a {
       color: #000;
