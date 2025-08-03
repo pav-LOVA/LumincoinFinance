@@ -41,8 +41,7 @@ module.exports = {
 
                 { from: "./node_modules/jquery/dist/jquery.min.js", to: "js" },
                 { from: "./node_modules/icheck-bootstrap/icheck-bootstrap.min.css", to: "css" },
-
-
+                
             ],
         }),
     ],

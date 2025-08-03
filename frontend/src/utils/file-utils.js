@@ -29,7 +29,6 @@ class FileUtils {
             reader.onerror = () => reject(new Error('Can not convert this file'));
         })
     }
-
 }
 
 module.exports = FileUtils;

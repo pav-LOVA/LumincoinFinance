@@ -17,20 +17,23 @@
             <div class="input-group mb-3 text-start">
                 <span class="input-group-text"><i class="fa-solid fa-envelope form-control-icon"></i></span>
                 <input type="email" class="form-control" placeholder="Электронная почта" required id="email">
+                <span id="email-error" class="invalid-feedback">Введите корректный email</span>
             </div>
 
             <div class="input-group mb-3 text-start">
                 <span class="input-group-text"><i class="fa-solid fa-lock form-control-icon"></i></span>
                 <input type="password" class="form-control" placeholder="Пароль" required id="password">
+                <span id="password-error" class="invalid-feedback">Пароль должен содержать хотя бы одну букву, один символ и одну цифру и иметь длину в 8 символов</span>
             </div>
 
             <div class="input-group mb-4 text-start">
                 <span class="input-group-text"><i class="fa-solid fa-lock form-control-icon"></i></span>
                 <input type="password" class="form-control" placeholder="Подтверждение пароля" required id="passwordRepeat">
+                <span id="passwordRepeat-error" class="invalid-feedback">Повторите пароль</span>
             </div>
 
             <div class="d-grid mb-3">
-                <button type="button" class="btn btn-primary" id="singUp">Войти</button>
+                <button type="button" class="btn btn-primary" id="signUp">Войти</button>
             </div>
 
             <p class="small-link">Уже есть аккаунт? <a href="/login">Войдите в систему</a></p>

@@ -1,7 +1,9 @@
 const Chart = require('chart.js/auto');
 
 class Main {
-    constructor() {
+    constructor(openNewRoute) {
+        this.openNewRoute = openNewRoute;
+
         const chartOptions = {
             responsive: true,
             plugins: {
