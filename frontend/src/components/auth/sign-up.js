@@ -10,7 +10,9 @@ class SignUp {
         }
 
         this.nameElement = document.getElementById('name');
+        this.nameErrorElement = document.getElementById('name');
         this.lastNameElement = document.getElementById('lastName');
+        this.lastNameErrorElement = document.getElementById('lastName');
         this.emailElement = document.getElementById('email');
         this.emailErrorElement = document.getElementById('email-error');
         this.passwordElement = document.getElementById('password');
@@ -24,14 +26,18 @@ class SignUp {
         let isValid = true;
         if (this.nameElement.value) {
             this.nameElement.classList.remove('is-invalid');
+            this.nameErrorElement.classList.remove('error');
         } else {
             this.nameElement.classList.add('is-invalid');
+            this.nameErrorElement.classList.add('error');
             isValid = false;
         }
         if (this.lastNameElement.value) {
             this.lastNameElement.classList.remove('is-invalid');
+            this.lastNameErrorElement.classList.remove('error');
         } else {
             this.lastNameElement.classList.add('is-invalid');
+            this.lastNameErrorElement.classList.add('error');
             isValid = false;
         }
         if (this.emailElement.value && this.emailElement.value.match(/^[A-Z0-9._%+-]+@[A-Z0-9-]+.+.[A-Z]{2,4}$/i)) {

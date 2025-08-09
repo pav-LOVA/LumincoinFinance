@@ -15,13 +15,13 @@ const ExpensesList = require("./components/categories/expenses/expenses-list");
 const ExpensesCreate = require("./components/categories/expenses/expenses-create");
 const ExpensesEdit = require("./components/categories/expenses/expenses-edit");
 const ExpensesDelete = require("./components/categories/expenses/expenses-delete");
+const HttpUtils = require("./utils/http-utils");
 
 
 class Router {
     constructor() {
         this.titlePageElement = document.getElementById('title');
         this.contentPageElement = document.getElementById('content');
-        this.adminlteStyleElement = document.getElementById('adminlte_style');
 
         this.initEvents();
         this.routes = [
@@ -31,7 +31,7 @@ class Router {
                 filePathTemplate: '/templates/pages/main.html',
                 useLayout: '/templates/layout.html',
                 load: () => {
-                    new Main();
+                    new Main(this.openNewRoute.bind(this));
                 }
             },
             {
@@ -85,7 +85,6 @@ class Router {
                 load: () => {
                     new CommonList(this.openNewRoute.bind(this));
                 },
-                styles: [''],
             },
             {
                 route: '/income&expenses/create',
@@ -95,7 +94,6 @@ class Router {
                 load: () => {
                     new CommonCreate(this.openNewRoute.bind(this));
                 },
-                styles: [''],
             },
             {
                 route: '/income&expenses/edit',
@@ -105,7 +103,6 @@ class Router {
                 load: () => {
                     new CommonEdit(this.openNewRoute.bind(this));
                 },
-                styles: [''],
             },
             {
                 route: '/income&expenses',
@@ -114,7 +111,6 @@ class Router {
                 load: () => {
                     new CommonDelete(this.openNewRoute.bind(this));
                 },
-                styles: [''],
             },
             {
                 route: '/income',
@@ -124,7 +120,6 @@ class Router {
                 load: () => {
                     new IncomeList(this.openNewRoute.bind(this));
                 },
-                styles: [''],
             },
             {
                 route: '/income/create',
@@ -134,7 +129,6 @@ class Router {
                 load: () => {
                     new IncomeCreate(this.openNewRoute.bind(this));
                 },
-                styles: [''],
             },
             {
                 route: '/income/edit',
@@ -144,16 +138,13 @@ class Router {
                 load: () => {
                     new IncomeEdit(this.openNewRoute.bind(this));
                 },
-                styles: [''],
             },
             {
-                route: '/income',
-                filePathTemplate: '/templates/pages/categories/income/delete.html',
+                route: '/income/delete',
                 useLayout: '/templates/layout.html',
                 load: () => {
                     new IncomeDelete(this.openNewRoute.bind(this));
                 },
-                styles: [''],
             },
             {
                 route: '/expenses',
@@ -163,7 +154,6 @@ class Router {
                 load: () => {
                     new ExpensesList(this.openNewRoute.bind(this));
                 },
-                styles: [''],
             },
             {
                 route: '/expenses/create',
@@ -173,7 +163,6 @@ class Router {
                 load: () => {
                     new ExpensesCreate(this.openNewRoute.bind(this));
                 },
-                styles: [''],
             },
             {
                 route: '/expenses/edit',
@@ -183,18 +172,13 @@ class Router {
                 load: () => {
                     new ExpensesEdit(this.openNewRoute.bind(this));
                 },
-                styles: [''],
             },
             {
-                route: '/expenses',
-                filePathTemplate: '/templates/pages/categories/expenses/delete.html',
-                useLayout: '/templates/layout.html',
+                route: '/expenses/delete',
                 load: () => {
                     new ExpensesDelete(this.openNewRoute.bind(this));
                 },
-                styles: [''],
             },
-
         ];
     }
 
@@ -253,7 +237,7 @@ class Router {
         if (newRoute) {
             if (newRoute.styles && newRoute.styles.length > 0) {
                 newRoute.styles.forEach(style => {
-                    FileUtils.loadPageStyle('/css/' + style, this.adminlteStyleElement)
+                    FileUtils.loadPageStyle('/css/' + style)
                 })
             }
             if (newRoute.scripts && newRoute.scripts.length > 0) {
@@ -261,7 +245,6 @@ class Router {
                     await FileUtils.loadPageScript('/js/' + script);
                 }
             }
-
             if (newRoute.title) {
                 this.titlePageElement.innerHTML = newRoute.title + ' | Lumincoin Finance';
             }

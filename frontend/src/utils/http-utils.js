@@ -20,7 +20,7 @@ class HttpUtils {
         if (useAuth) {
             token = AuthUtils.getAuthInfo(AuthUtils.accessTokenKey);
             if (token) {
-                params.headers['authorization'] = token;
+                params.headers['x-auth-token'] = token;
             }
         }
 
@@ -40,7 +40,6 @@ class HttpUtils {
         if(response.status < 200 || response.status >= 300) {
             result.error = true;
             if(useAuth && response.status === 401) {
-                let token = AuthUtils.getAuthInfo(AuthUtils.accessTokenKey);
                 if (!token) {
                     result.redirect = '/login';
                 } else {
