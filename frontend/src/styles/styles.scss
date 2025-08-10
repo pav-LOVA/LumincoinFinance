@@ -19,6 +19,7 @@ body {
     font-size: 52px;
   }
 }
+
 .layout {
   .sidebar {
     p{
@@ -56,8 +57,10 @@ body {
         height: 40px;
         a, button {
           color: #052C65;
-          &:hover, &:focus {background: #0D6EFD;
-          color: white;
+          &:hover {
+            background: #0D6EFD;
+            border-radius: 5px;
+            color: white;
           }
         }
         .btn {
@@ -149,4 +152,12 @@ body {
     margin-left: 200px;
     padding: 60px;
   }
+}
+
+.active {
+  background: #0D6EFD;
+  p{
+    color: white;
+  }
+  border-radius: 5px;
 }
