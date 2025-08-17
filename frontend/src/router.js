@@ -15,13 +15,16 @@ const ExpensesList = require("./components/categories/expenses/expenses-list");
 const ExpensesCreate = require("./components/categories/expenses/expenses-create");
 const ExpensesEdit = require("./components/categories/expenses/expenses-edit");
 const ExpensesDelete = require("./components/categories/expenses/expenses-delete");
-const HttpUtils = require("./utils/http-utils");
+const AuthUtils = require("./utils/auth-utils");
+const BalanceUtils = require('./utils/balance-utils');
 
 
 class Router {
     constructor() {
         this.titlePageElement = document.getElementById('title');
         this.contentPageElement = document.getElementById('content');
+        this.userName = null;
+        this.userLastName = null;
 
         this.initEvents();
         this.routes = [
@@ -105,9 +108,7 @@ class Router {
                 },
             },
             {
-                route: '/income&expenses',
-                filePathTemplate: '/templates/pages/categories/common/delete.html',
-                useLayout: '/templates/layout.html',
+                route: '/income&expenses/delete',
                 load: () => {
                     new CommonDelete(this.openNewRoute.bind(this));
                 },
@@ -141,7 +142,6 @@ class Router {
             },
             {
                 route: '/income/delete',
-                useLayout: '/templates/layout.html',
                 load: () => {
                     new IncomeDelete(this.openNewRoute.bind(this));
                 },
@@ -256,6 +256,19 @@ class Router {
                     contentBlock = document.getElementById('content-layout');
                     document.body.classList.add('sidebar-mini');
                     document.body.classList.add('layout-fixed');
+
+                    this.userNameElement = document.getElementById('user-name');
+                        let userInfo = AuthUtils.getAuthInfo(AuthUtils.userInfoKey);
+                        if(userInfo) {
+                            userInfo = JSON.parse(userInfo);
+                            if(userInfo.name && userInfo.lastName) {
+                                this.userName = userInfo.name;
+                                this.userLastName = userInfo.lastName;
+                            }
+                        }
+                    this.userNameElement.innerText = this.userName + ' ' + this.userLastName;
+                    this.userNameElement = document.getElementById('balance').innerText = await BalanceUtils.getBalance() + '$';
+
                     this.activateMenuItem(newRoute);
                 } else {
                     document.body.classList.remove('sidebar-mini');

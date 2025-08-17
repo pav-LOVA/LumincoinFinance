@@ -24,7 +24,7 @@ class SignUp {
 
     validateForm() {
         let isValid = true;
-        if (this.nameElement.value) {
+        if (this.nameElement.value && this.nameElement.value.match(/^([А-Я\s][а-яё]{1,50})$/)) {
             this.nameElement.classList.remove('is-invalid');
             this.nameErrorElement.classList.remove('error');
         } else {
@@ -32,7 +32,7 @@ class SignUp {
             this.nameErrorElement.classList.add('error');
             isValid = false;
         }
-        if (this.lastNameElement.value) {
+        if (this.lastNameElement.value && this.lastNameElement.value.match(/^([А-ЯЁ\s][а-яё]{1,50})$/)) {
             this.lastNameElement.classList.remove('is-invalid');
             this.lastNameErrorElement.classList.remove('error');
         } else {
@@ -48,7 +48,7 @@ class SignUp {
             this.emailErrorElement.classList.add('error');
             isValid = false;
         }
-        if (this.passwordElement.value && this.passwordElement.value.match(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/)) {
+        if (this.passwordElement.value && this.passwordElement.value.match(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/)) {
             this.passwordElement.classList.remove('is-invalid');
             this.passwordErrorElement.classList.remove('error');
         } else {

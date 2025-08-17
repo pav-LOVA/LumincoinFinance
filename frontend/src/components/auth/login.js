@@ -5,7 +5,7 @@ class Login {
     constructor(openNewRoute) {
         this.openNewRoute = openNewRoute;
 
-        if(AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)){
+        if (AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
             return this.openNewRoute('/');
         }
         this.emailElement = document.getElementById('email');
@@ -13,6 +13,8 @@ class Login {
         this.passwordElement = document.getElementById('password');
         this.passwordErrorElement = document.getElementById('password-error');
         this.rememberMeElement = document.getElementById('rememberMe');
+        this.commonErrorElement = document.getElementById('common-error');
+
         document.getElementById('login').addEventListener('click', this.login.bind(this));
     }
 
@@ -38,17 +40,23 @@ class Login {
     }
 
     async login() {
-        if(this.validateForm()) {
-            const result = await HttpUtils.request('/login', 'POST', false,{
+        this.commonErrorElement.style.display = 'none';
+        if (this.validateForm()) {
+            const result = await HttpUtils.request('/login', 'POST', false, {
                 email: this.emailElement.value,
                 password: this.passwordElement.value,
                 rememberMe: this.rememberMeElement.checked,
             });
 
             if (result.error || !result.response || (result.response && (!result.response.tokens.refreshToken || !result.response.tokens.accessToken || !result.response.user))) {
+                this.commonErrorElement.style.display = 'block';
                 return;
             }
-            AuthUtils.setAuthInfo(result.response.tokens.accessToken, result.response.tokens.refreshToken, {id: result.response.user.id, name: result.response.user.name, lastName: result.response.user.lastName});
+            AuthUtils.setAuthInfo(result.response.tokens.accessToken, result.response.tokens.refreshToken, {
+                id: result.response.user.id,
+                name: result.response.user.name,
+                lastName: result.response.user.lastName
+            });
             this.openNewRoute('/');
         }
     }

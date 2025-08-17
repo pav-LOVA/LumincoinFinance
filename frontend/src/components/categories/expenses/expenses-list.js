@@ -38,14 +38,14 @@ class ExpensesList {
             editButtonElement.innerText = 'Редактировать';
             editButtonElement.href = '/expenses/edit?id=' + categories[i].id;
 
-            const DeleteButtonElement = document.createElement('a');
-            DeleteButtonElement.className = 'btn btn-danger btn-sm';
-            DeleteButtonElement.innerText = 'Удалить';
+            const deleteButtonElement = document.createElement('a');
+            deleteButtonElement.className = 'btn btn-danger btn-sm';
+            deleteButtonElement.innerText = 'Удалить';
 
-            DeleteButtonElement.addEventListener('click', () => this.showPopup(categories[i].id));
+            deleteButtonElement.addEventListener('click', () => this.showPopup(categories[i].id));
 
             buttonContainerElement.appendChild(editButtonElement);
-            buttonContainerElement.appendChild(DeleteButtonElement);
+            buttonContainerElement.appendChild(deleteButtonElement);
             cardItemElement.appendChild(cardTitle);
             cardItemElement.appendChild(buttonContainerElement);
             recordsElement.appendChild(cardItemElement);
