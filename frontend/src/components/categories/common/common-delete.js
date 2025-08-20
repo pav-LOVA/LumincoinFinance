@@ -1,5 +1,4 @@
 const HttpUtils = require("../../../utils/http-utils");
-const AuthUtils = require("../../../utils/auth-utils");
 
 class CommonDelete {
     constructor(openNewRoute) {

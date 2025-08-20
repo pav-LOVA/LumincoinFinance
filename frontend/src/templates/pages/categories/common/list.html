@@ -7,15 +7,13 @@
     </div>
 
     <div class="filter mb-4">
-        <button type="button" class="btn btn-secondary active me-3" data-period="today">Сегодня</button>
+        <button type="button" class="btn btn-outline-secondary active me-3" data-period="today">Сегодня</button>
         <button type="button" class="btn btn-outline-secondary me-3" data-period="week">Неделя</button>
         <button type="button" class="btn btn-outline-secondary me-3" data-period="month">Месяц</button>
         <button type="button" class="btn btn-outline-secondary me-3" data-period="year">Год</button>
         <button type="button" class="btn btn-outline-secondary me-3" data-period="all">Все</button>
-        <button type="button" class="btn btn-outline-secondary me-3" data-period="custom">Интервал</button>
-        <span><b>с</b> <a href="javascript:void(0)"
-                          class="text-body-secondary link-underline-secondary ms-3 me-3"><input type="date" id="dateFrom" placeholder="Дата"></a> <b>по</b> <a
-                href="javascript:void(0)" class="text-body-secondary link-underline-secondary ms-3 me-3"><input type="date" id="dateTo" placeholder="Дата"></a></span>
+        <button type="button" class="btn btn-outline-secondary me-3" data-period="interval">Интервал</button>
+        <span><b>с</b> <input type="date" class="text-body-secondary link-underline-secondary ms-3 me-3" id="dateFrom" placeholder="Дата"> <b>по</b> <input type="date" class="text-body-secondary link-underline-secondary ms-3 me-3" id="dateTo" placeholder="Дата"></span>
     </div>
 
     <table class="table text-center">
@@ -50,7 +48,7 @@
     <div class="popUp-msg rounded-2">
         <p>Вы действительно хотите удалить операцию?
         </p>
-        <a href='/' type="button" class="btn btn-success me-2" id="delete">Да, удалить</a>
+        <a href='#' type="button" class="btn btn-success me-2" id="delete">Да, удалить</a>
         <button type="button" class="btn btn-danger" id="nonDelete">Не удалять</button>
     </div>
 </div>

@@ -97,9 +97,8 @@ class CommonCreate {
                 amount: this.amountElement.value,
                 date: this.dateElement.value,
                 comment: this.commentElement.value,
-                category_id: this.categoryElement.value,
+                category_id: parseInt(this.categoryElement.value),
             };
-                        console.log(createData);
             const result = await HttpUtils.request('/operations', 'POST', true, createData);
             if (result.redirect) {
                 return this.openNewRoute(result.redirect);
@@ -108,7 +107,6 @@ class CommonCreate {
             if (result.error || !result.response || (result.response && (result.response.error))) {
                 return alert('Возникла ошибка, обратитесь в поддержку');
             }
-                        console.log(result.response);
             return this.openNewRoute('/income&expenses');
         }
     }

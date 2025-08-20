@@ -6,7 +6,7 @@ class AuthUtils {
     static refreshTokenKey = 'refreshToken';
     static userInfoKey = 'userInfo';
 
-    static setAuthInfo(accessToken, refreshToken, userInfo = null, balance = null) {
+    static setAuthInfo(accessToken, refreshToken, userInfo = null) {
         localStorage.setItem(this.accessTokenKey, accessToken);
         localStorage.setItem(this.refreshTokenKey, refreshToken);
         if (userInfo) {

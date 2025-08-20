@@ -1,5 +1,4 @@
 const HttpUtils = require("../../../utils/http-utils");
-const AuthUtils = require("../../../utils/auth-utils");
 
 class CommonEdit {
     constructor(openNewRoute) {
@@ -10,8 +9,6 @@ class CommonEdit {
         if (!id) {
             return this.openNewRoute = '/income&expenses/';
         }
-
-        this.getOperation(id).then();
 
         this.incomeElement = document.getElementById('income-element');
         this.expenseElement = document.getElementById('expense-element');
@@ -27,6 +24,7 @@ class CommonEdit {
         this.commentErrorElement = document.getElementById('comment-element-error');
 
         document.getElementById('updateButton').addEventListener('click', this.updateOperation.bind(this));
+        this.getOperation(id).then();
     }
 
     async getOperation(id) {
@@ -34,19 +32,12 @@ class CommonEdit {
         if (result.redirect) {
             return this.openNewRoute(result.redirect);
         }
-
         if (result.error || !result.response || (result.response && (result.response.error))) {
             return alert('Возникла ошибка, обратитесь в поддержку');
         }
 
         this.operationOriginalData = result.response;
         this.showOperation(result.response);
-
-        if (result.response.type === 'expense') {
-            this.expenseElement.setAttribute("selected", "selected");
-        } else if (result.response.type === 'income') {
-            this.incomeElement.setAttribute("selected", "selected");
-        }
         this.getCategories(result.response);
     }
 
@@ -63,24 +54,26 @@ class CommonEdit {
             const option = document.createElement("option");
             option.value = categories[i].id
             option.innerText = categories[i].title;
-            if (operation.category === categories[i].id) {
-                option.selected = true;
-            }
             this.categoryElement.appendChild(option);
         }
+
+        const found = categories.find(cat => cat.title === operation.category);
+        if (found) {
+            this.categoryElement.value = found.id;
+        }
+
+        this.showOperation(operation);
     }
 
     showOperation(operation) {
+        if (operation.type === 'expense') {
+            this.expenseElement.setAttribute("selected", "selected");
+        } else if (operation.type === 'income') {
+            this.incomeElement.setAttribute("selected", "selected");
+        }
         this.amountElement.value = operation.amount;
         this.dateElement.value = operation.date;
         this.commentElement.value = operation.comment;
-
-        // this.categoryElement.value = operation.category_id;
-        for (let i = 0; i < this.categoryElement.options.length; i++) {
-            if (this.categoryElement.options[i].value === operation.category_id) {
-                this.categoryElement.selectedIndex = i;
-            }
-        }
     }
 
     validateForm() {
@@ -129,9 +122,8 @@ class CommonEdit {
                 amount: this.amountElement.value,
                 date: this.dateElement.value,
                 comment: this.commentElement.value,
-                category_id: this.categoryElement.value,
+                category_id: parseInt(this.categoryElement.value),
             };
-
             const result = await HttpUtils.request('/operations/' + this.operationOriginalData.id, 'PUT', true, createData);
             if (result.redirect) {
                 return this.openNewRoute(result.redirect);

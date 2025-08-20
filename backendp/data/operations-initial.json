@@ -68,5 +68,131 @@
     "amount": 6000,
     "date": "2022-04-03",
     "comment": "Стоматолог"
+  },
+
+
+
+  {
+    "id": 8,
+    "user_id": 1,
+    "category_expense_id": 6,
+    "category_income_id": null,
+    "type": "expense",
+    "amount": 6000,
+    "date": "2025-01-01",
+    "comment": "Стоматолог"
+  },
+  {
+    "id": 9,
+    "user_id": 1,
+    "category_expense_id": 7,
+    "category_income_id": null,
+    "type": "expense",
+    "amount": 6000,
+    "date": "2022-01-02",
+    "comment": "Стоматолог"
+  },
+  {
+    "id": 10,
+    "user_id": 1,
+    "category_expense_id": 6,
+    "category_income_id": null,
+    "type": "expense",
+    "amount": 6000,
+    "date": "2022-04-05",
+    "comment": "Стоматолог"
+  },
+  {
+    "id": 11,
+    "user_id": 1,
+    "category_expense_id": 1,
+    "category_income_id": null,
+    "type": "expense",
+    "amount": 6000,
+    "date": "2022-04-05",
+    "comment": "Стоматолог"
+  },
+  {
+    "id": 12,
+    "user_id": 1,
+    "category_expense_id": 9,
+    "category_income_id": null,
+    "type": "expense",
+    "amount": 6000,
+    "date": "2022-01-01",
+    "comment": "Стоматолог"
+  },
+  {
+    "id": 13,
+    "user_id": 1,
+    "category_expense_id": 8,
+    "category_income_id": null,
+    "type": "expense",
+    "amount": 6000,
+    "date": "2023-01-01",
+    "comment": "Стоматолог"
+  },
+  {
+    "id": 14,
+    "user_id": 1,
+    "category_expense_id": 9,
+    "category_income_id": null,
+    "type": "expense",
+    "amount": 6000,
+    "date": "2024-01-01",
+    "comment": "Стоматолог"
+  },
+
+
+
+  {
+    "id": 15,
+    "user_id": 1,
+    "category_expense_id": null,
+    "category_income_id": 1,
+    "type": "income",
+    "amount": 6000,
+    "date": "2022-01-01",
+    "comment": "Стоматолог"
+  },
+  {
+    "id": 16,
+    "user_id": 1,
+    "category_expense_id": null,
+    "category_income_id": 2,
+    "type": "income",
+    "amount": 6000,
+    "date": "2025-07-03",
+    "comment": "Стоматолог"
+  },
+  {
+    "id": 17,
+    "user_id": 1,
+    "category_expense_id": null,
+    "category_income_id": 3,
+    "type": "income",
+    "amount": 6000,
+    "date": "2025-08-20",
+    "comment": "Стоматолог"
+  },
+  {
+    "id": 18,
+    "user_id": 1,
+    "category_expense_id": null,
+    "category_income_id": 4,
+    "type": "income",
+    "amount": 6000,
+    "date": "2025-11-03",
+    "comment": "Стоматолог"
+  },
+  {
+    "id": 19,
+    "user_id": 1,
+    "category_expense_id": null,
+    "category_income_id": 4,
+    "type": "income",
+    "amount": 6000,
+    "date": "2025-12-03",
+    "comment": "Стоматолог"
   }
 ]
