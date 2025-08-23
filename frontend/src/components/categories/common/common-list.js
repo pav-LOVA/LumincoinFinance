@@ -9,7 +9,6 @@ class CommonList {
 
         document.getElementById('nonDelete').addEventListener('click', this.hidePopup.bind(this));
 
-
         this.getOperations();
         this.periodButtons.forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -45,10 +44,9 @@ class CommonList {
         if (period === 'interval') {
             const from = this.dateFrom.value;
             const to = this.dateTo.value;
-
             const params = [];
-            if (from) params.push(this.dateFrom=from);
-            if (to) params.push(this.dateTo=to);
+            if (from) params.push(`dateFrom=${from}`);
+            if (to) params.push(`dateTo=${to}`);
             if (params.length > 0) url += '&' + params.join('&');
         }
 
@@ -75,7 +73,11 @@ class CommonList {
             } else if (operations[i].type ==='expense') {
                 trElement.insertCell().innerHTML = '<span class="text-expense text-danger">' + 'расход' + '</span>';
             }
-            trElement.insertCell().innerText = operations[i].category;
+            if (!operations[i].category) {
+                trElement.insertCell().innerText = 'Без категории';
+            } else {
+                trElement.insertCell().innerText = operations[i].category;
+            }
             trElement.insertCell().innerText = operations[i].amount;
             trElement.insertCell().innerText = operations[i].date;
             trElement.insertCell().innerText = operations[i].comment;
@@ -95,11 +97,26 @@ class CommonList {
 
     showPopup(id){
         document.getElementById('popUp').style.display = 'flex';
-        document.getElementById('delete').href = '/income&expenses/delete?id=' + id;
+        document.getElementById('delete').addEventListener('click', (e) => {
+            e.preventDefault();
+            this.deleteOperation(id);
+        });
+        // document.getElementById('delete').href = '/income&expenses/delete?id=' + id;
     }
 
     hidePopup(){
         document.getElementById('popUp').style.display = 'none';
+    }
+
+    async deleteOperation(id) {
+        const result = await HttpUtils.request('/operations/' + id, 'DELETE', true);
+        if (result.redirect) {
+            return this.openNewRoute(result.redirect);
+        }
+        if (result.error || !result.response || (result.response && (result.response.error))) {
+            return alert('Возникла ошибка, обратитесь в поддержку');
+        }
+        return this.openNewRoute('/income&expenses');
     }
 }
 

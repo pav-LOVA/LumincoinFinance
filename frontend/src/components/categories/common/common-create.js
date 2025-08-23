@@ -4,11 +4,14 @@ const AuthUtils = require("../../../utils/auth-utils");
 class CommonCreate {
     constructor(openNewRoute) {
         this.openNewRoute = openNewRoute;
+        if (!AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
+            return this.openNewRoute('/login');
+        }
 
         const urlParams = new URLSearchParams(window.location.search);
         const type = urlParams.get('type');
         if (!type) {
-            return this.openNewRoute = '/income&expenses/';
+            return this.openNewRoute = '/income&expenses';
         }
 
         this.incomeElement = document.getElementById('income-element');

@@ -1,8 +1,13 @@
 const HttpUtils = require('./../../../utils/http-utils');
+const AuthUtils = require("../../../utils/auth-utils");
 
 class ExpensesCreate {
     constructor(openNewRoute) {
         this.openNewRoute = openNewRoute;
+        if (!AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
+            return this.openNewRoute('/login');
+        }
+
         document.getElementById('saveButton').addEventListener('click', this.saveCategory.bind(this));
 
         this.expenseCategoryElement = document.getElementById('expenseCategory');

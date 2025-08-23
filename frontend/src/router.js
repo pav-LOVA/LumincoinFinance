@@ -107,12 +107,12 @@ class Router {
                     new CommonEdit(this.openNewRoute.bind(this));
                 },
             },
-            {
-                route: '/income&expenses/delete',
-                load: () => {
-                    new CommonDelete(this.openNewRoute.bind(this));
-                },
-            },
+            // {
+            //     route: '/income&expenses/delete',
+            //     load: () => {
+            //         new CommonDelete(this.openNewRoute.bind(this));
+            //     },
+            // },
             {
                 route: '/income',
                 title: 'Доходы',
@@ -140,12 +140,12 @@ class Router {
                     new IncomeEdit(this.openNewRoute.bind(this));
                 },
             },
-            {
-                route: '/income/delete',
-                load: () => {
-                    new IncomeDelete(this.openNewRoute.bind(this));
-                },
-            },
+            // {
+            //     route: '/income/delete',
+            //     load: () => {
+            //         new IncomeDelete(this.openNewRoute.bind(this));
+            //     },
+            // },
             {
                 route: '/expenses',
                 title: 'Расходы',
@@ -173,12 +173,12 @@ class Router {
                     new ExpensesEdit(this.openNewRoute.bind(this));
                 },
             },
-            {
-                route: '/expenses/delete',
-                load: () => {
-                    new ExpensesDelete(this.openNewRoute.bind(this));
-                },
-            },
+            // {
+            //     route: '/expenses/delete',
+            //     load: () => {
+            //         new ExpensesDelete(this.openNewRoute.bind(this));
+            //     },
+            // },
         ];
     }
 
