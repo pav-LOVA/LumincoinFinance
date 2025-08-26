@@ -38,14 +38,14 @@ class ExpensesList {
             editButtonElement.innerText = 'Редактировать';
             editButtonElement.href = '/expenses/edit?id=' + categories[i].id;
 
-            const DeleteButtonElement = document.createElement('a');
-            DeleteButtonElement.className = 'btn btn-danger btn-sm';
-            DeleteButtonElement.innerText = 'Удалить';
+            const deleteButtonElement = document.createElement('a');
+            deleteButtonElement.className = 'btn btn-danger btn-sm';
+            deleteButtonElement.innerText = 'Удалить';
 
-            DeleteButtonElement.addEventListener('click', () => this.showPopup(categories[i].id));
+            deleteButtonElement.addEventListener('click', () => this.showPopup(categories[i].id));
 
             buttonContainerElement.appendChild(editButtonElement);
-            buttonContainerElement.appendChild(DeleteButtonElement);
+            buttonContainerElement.appendChild(deleteButtonElement);
             cardItemElement.appendChild(cardTitle);
             cardItemElement.appendChild(buttonContainerElement);
             recordsElement.appendChild(cardItemElement);
@@ -62,11 +62,26 @@ class ExpensesList {
 
     showPopup(id) {
         document.getElementById('popUp').style.display = 'flex';
-        document.getElementById('delete').href = '/expenses/delete?id=' + id;
+        document.getElementById('delete').addEventListener('click', (e) => {
+            e.preventDefault();
+            this.deleteCategory(id);
+        });
+        // document.getElementById('delete').href = '/expenses/delete?id=' + id;
     }
 
     hidePopup() {
         document.getElementById('popUp').style.display = 'none';
+    }
+
+    async deleteCategory(id) {
+        const result = await HttpUtils.request('/categories/expense/' + id, 'DELETE', true);
+        if (result.redirect) {
+            return this.openNewRoute(result.redirect);
+        }
+        if (result.error || !result.response || (result.response && (result.response.error))) {
+            return alert('Возникла ошибка, обратитесь в поддержку');
+        }
+        return this.openNewRoute('/expenses');
     }
 }
 

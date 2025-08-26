@@ -1,20 +1,26 @@
 <div class="edit edit-container">
     <h2 class="mb-5">Редактирование дохода/расхода</h2>
     <form>
-        <select class="form-control mb-2">
-            <option value="income" class="form-select" selected>Доход</option>
-            <option value="expenses" class="form-select">Расход</option>
+        <select class="form-control" disabled id="operation-element">
+            <option value="income" class="form-select" selected id="income-element">Доход</option>
+            <option value="expense" class="form-select" id="expense-element">Расход</option>
         </select>
-        <select class="form-control mb-2">
-            <option value="" class="form-select" selected>Категория...</option>
-            <option value="" class="form-select"></option>
+        <select class="form-control mt-2" id="category-element">
+            <option value="null" class="form-select" selected>Категория...</option>
         </select>
-        <input type="number" class="form-control mb-2" placeholder="Сумма в $..." required>
-        <input type="date" class="form-control mb-2" placeholder="Дата..." required>
-        <textarea class="form-control mb-3" placeholder="Комментарий..."></textarea>
+        <span id="category-element-error" class="invalid-feedback">Заполните поле</span>
 
-        <button type="button" class="btn btn-success me-2">Сохранить</button>
-        <a href="/income&expenses" type="button" class="btn btn-danger">Отмена</a>
+        <input type="number" class="form-control mt-2" placeholder="Сумма в $..." id="amount-element" required>
+        <span id="amount-element-error" class="invalid-feedback">Заполните поле</span>
+
+        <input type="date" class="form-control mt-2" placeholder="Дата..." id="date-element" required>
+        <span id="date-element-error" class="invalid-feedback">Заполните поле</span>
+
+        <textarea class="form-control mt-2" placeholder="Комментарий..." id="comment-element"></textarea>
+        <span id="comment-element-error" class="invalid-feedback">Заполните поле</span>
+
+        <button type="button" class="btn btn-success me-2 mt-3" id="updateButton">Сохранить</button>
+        <a href="/income&expenses" type="button" class="btn btn-danger mt-3">Отмена</a>
     </form>
 </div>
 

@@ -10,6 +10,10 @@
     color: #052C65;
   }
   form {
+    #common-error {
+      color: red;
+      display: none;
+    }
     .input-group {
       .input-group-text {
         width: 38px;

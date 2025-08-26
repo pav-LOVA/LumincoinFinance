@@ -87,6 +87,10 @@
       width: 397px;
     }
 
+    span {
+      margin: 0 0 10px 0;
+    }
+
     .btn-success {
       width: 103px;
     }
@@ -102,9 +106,16 @@
     .btn {
       width: 100px;
     }
-    .btn-filter.active {
+    .btn.active {
       background-color: #6c757d;
       color: white;
+    }
+    input {
+      border: none;
+      border-bottom: 1px solid black;
+      outline: none;
+      background-color: transparent;
+      color: inherit;
     }
   }
 

@@ -2,13 +2,13 @@
     <h2 class="mb-5">Главная</h2>
 
     <div class="filter">
-        <button type="button" class="btn btn-secondary active me-3">Сегодня</button>
-        <button type="button" class="btn btn-outline-secondary me-3">Неделя</button>
-        <button type="button" class="btn btn-outline-secondary me-3">Месяц</button>
-        <button type="button" class="btn btn-outline-secondary me-3">Год</button>
-        <button type="button" class="btn btn-outline-secondary me-3">Все</button>
-        <button type="button" class="btn btn-outline-secondary me-3">Интервал</button>
-        <span><b>с</b> <a href="javascript:void(0)" class="text-body-secondary link-underline-secondary ms-3 me-3">Дата</a> <b>по</b> <a href="javascript:void(0)" class="text-body-secondary link-underline-secondary ms-3 me-3">Дата</a></span>
+        <button type="button" class="btn btn-outline-secondary active me-3" data-period="today">Сегодня</button>
+        <button type="button" class="btn btn-outline-secondary me-3" data-period="week">Неделя</button>
+        <button type="button" class="btn btn-outline-secondary me-3" data-period="month">Месяц</button>
+        <button type="button" class="btn btn-outline-secondary me-3" data-period="year">Год</button>
+        <button type="button" class="btn btn-outline-secondary me-3" data-period="all">Все</button>
+        <button type="button" class="btn btn-outline-secondary me-3" data-period="interval">Интервал</button>
+        <span><b>с</b> <input type="date" class="text-body-secondary link-underline-secondary ms-3 me-3" id="dateFrom" placeholder="Дата"> <b>по</b> <input type="date" class="text-body-secondary link-underline-secondary ms-3 me-3" id="dateTo" placeholder="Дата"></span>
     </div>
 
     <div class="chart">

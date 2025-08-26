@@ -62,11 +62,26 @@ class IncomeList {
 
     showPopup(id) {
         document.getElementById('popUp').style.display = 'flex';
-        document.getElementById('delete').href = '/income/delete?id=' + id;
+        document.getElementById('delete').addEventListener('click', (e) => {
+            e.preventDefault();
+            this.deleteCategory(id);
+        });
+        // document.getElementById('delete').href = '/income/delete?id=' + id;
     }
 
     hidePopup() {
         document.getElementById('popUp').style.display = 'none';
+    }
+
+    async deleteCategory(id) {
+        const result = await HttpUtils.request('/categories/income/' + id, 'DELETE', true);
+        if (result.redirect) {
+            return this.openNewRoute(result.redirect);
+        }
+        if (result.error || !result.response || (result.response && (result.response.error))) {
+            return alert('Возникла ошибка, обратитесь в поддержку');
+        }
+        return this.openNewRoute('/income');
     }
 }
 
