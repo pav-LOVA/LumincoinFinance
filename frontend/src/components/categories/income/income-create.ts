@@ -1,33 +1,40 @@
-const HttpUtils = require('./../../../utils/http-utils');
-const AuthUtils = require("../../../utils/auth-utils");
+import {HttpUtils} from "../../../utils/http-utils";
+import {AuthUtils} from "../../../utils/auth-utils";
 
-class IncomeCreate {
-    constructor(openNewRoute) {
+
+export class IncomeCreate {
+    readonly openNewRoute: any;
+    readonly incomeCategoryElement: HTMLInputElement | undefined;
+
+    constructor(openNewRoute: any) {
         this.openNewRoute = openNewRoute;
         if (!AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
             return this.openNewRoute('/login');
         }
 
-        document.getElementById('saveButton').addEventListener('click', this.saveCategory.bind(this));
+        const saveButton: HTMLElement | null = document.getElementById('saveButton');
+        if(saveButton) {
+            saveButton.addEventListener('click', this.saveCategory.bind(this));
+        }
 
-        this.incomeCategoryElement = document.getElementById('incomeCategory');
+        this.incomeCategoryElement = document.getElementById('incomeCategory') as HTMLInputElement;
     }
 
-    validateForm() {
-        let isValid = true;
-            if (this.incomeCategoryElement.value) {
+    private validateForm(): boolean {
+        let isValid: boolean = true;
+            if ( this.incomeCategoryElement && this.incomeCategoryElement.value) {
                 this.incomeCategoryElement.classList.remove('is-invalid');
-            } else {
+            } else if (this.incomeCategoryElement) {
                 this.incomeCategoryElement.classList.add('is-invalid');
                 isValid = false;
             }
         return isValid;
     }
 
-    async saveCategory(e) {
+    private async saveCategory(e: any): Promise<any> {
         e.preventDefault();
 
-        if (this.validateForm()) {
+        if (this.incomeCategoryElement && this.validateForm()) {
             const createData= {
                 title: this.incomeCategoryElement.value,
             }
@@ -44,5 +51,3 @@ class IncomeCreate {
         }
     }
 }
-
-module.exports = IncomeCreate;

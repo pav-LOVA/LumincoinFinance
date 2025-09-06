@@ -1,45 +1,54 @@
-const HttpUtils = require("../../../utils/http-utils");
+import {HttpUtils} from "../../../utils/http-utils";
 
-class CommonList {
-    constructor(openNewRoute) {
+export class CommonList {
+    readonly openNewRoute: any;
+    private periodButtons: NodeListOf<HTMLButtonElement>;
+    private dateFrom: HTMLInputElement;
+    private dateTo: HTMLInputElement;
+
+    constructor(openNewRoute: any) {
         this.openNewRoute=openNewRoute;
         this.periodButtons = document.querySelectorAll('.filter button[data-period]');
-        this.dateFrom = document.getElementById('dateFrom');
-        this.dateTo = document.getElementById('dateTo');
+        this.dateFrom = document.getElementById('dateFrom') as HTMLInputElement;
+        this.dateTo = document.getElementById('dateTo') as HTMLInputElement;
 
-        document.getElementById('nonDelete').addEventListener('click', this.hidePopup.bind(this));
+        const nonDelete: HTMLElement | null = document.getElementById('nonDelete');
+        if(nonDelete) {
+            nonDelete.addEventListener('click', this.hidePopup.bind(this));
+        }
 
         this.getOperations();
         this.periodButtons.forEach(btn => {
-            btn.addEventListener('click', (e) => {
+            btn.addEventListener('click', (e: any):void => {
                 e.preventDefault();
                 this.periodButtons.forEach(btn => btn.classList.remove('active'));
                 btn.classList.add('active');
 
-                const period = btn.dataset.period;
+                const period: string | undefined = btn.dataset.period as string;
                 this.getOperations(period);
             });
         });
 
-        const todayBtn = document.querySelector('.filter button[data-period="today"]');
+        const todayBtn: Element | null = document.querySelector('.filter button[data-period="today"]');
         if (todayBtn) todayBtn.classList.add('active');
 
         this.dateFrom.addEventListener('change', () => this.onCustomDateChange());
         this.dateTo.addEventListener('change', () => this.onCustomDateChange());
     }
 
-    onCustomDateChange() {
+    private onCustomDateChange(): void {
         this.periodButtons.forEach(btn => btn.classList.remove('active'));
-        const intervalBtn = document.querySelector('.filter button[data-period="interval"]');
-        intervalBtn.classList.add('active');
-
+        const intervalBtn: Element | null = document.querySelector('.filter button[data-period="interval"]');
+        if (intervalBtn) {
+            intervalBtn.classList.add('active');
+        }
         if (this.dateFrom.value && this.dateTo.value) {
             this.getOperations('interval');
         }
     }
 
-    async getOperations(period = 'today') {
-        let url = '/operations?period=' + period;
+    private async getOperations(period = 'today'): Promise<any> {
+        let url: string = '/operations?period=' + period;
 
         if (period === 'interval') {
             const from = this.dateFrom.value;
@@ -50,8 +59,10 @@ class CommonList {
             if (params.length > 0) url += '&' + params.join('&');
         }
 
-        const recordsElement = document.getElementById('records');
-        recordsElement.innerHTML = '';
+        const recordsElement: HTMLElement | null = document.getElementById('records');
+        if(recordsElement) {
+            recordsElement.innerHTML = '';
+        }
 
         const result = await HttpUtils.request(url);
         if (result.redirect) {
@@ -63,10 +74,10 @@ class CommonList {
         this.showRecords(result.response);
     }
 
-    showRecords(operations) {
-        const recordsElement = document.getElementById('records');
-        for (let i = 0; i < operations.length; i++) {
-            const trElement = document.createElement('tr');
+    private showRecords(operations:any): void {
+        const recordsElement: HTMLElement | null = document.getElementById('records');
+        for (let i: number = 0; i < operations.length; i++) {
+            const trElement: HTMLTableRowElement = document.createElement('tr');
             trElement.insertCell().innerHTML = '<strong>' + operations[i].id + '</strong>';
             if (operations[i].type === 'income') {
                 trElement.insertCell().innerHTML = '<span class="text-income text-success">' + 'доход' + '</span>';
@@ -85,30 +96,42 @@ class CommonList {
                 '<a href="/income&expenses" class="fa fa-trash me-2" data-id=' + operations[i].id+ '></a>' +
                 '<a href="/income&expenses/edit?id=' + operations[i].id + '" class="fa fa-pencil" ></a>' +
                 '</div>';
-            recordsElement.appendChild(trElement);
+            if(recordsElement) {
+                recordsElement.appendChild(trElement);
+            }
 
-            const deleteButtonElement = trElement.querySelector('.fa-trash');
-            deleteButtonElement.addEventListener('click', (e) => {
+            const deleteButtonElement: HTMLElement | null = trElement.querySelector('.fa-trash');
+            if(deleteButtonElement) {
+                deleteButtonElement.addEventListener('click', (e:any):void => {
+                    e.preventDefault();
+                    this.showPopup(e.currentTarget.dataset.id);
+                });
+            }
+        }
+    }
+
+    private showPopup(id:number): void{
+        const popUp: HTMLElement | null = document.getElementById('popUp');
+        if(popUp) {
+            popUp.style.display = 'flex';
+        }
+        const deleteButton: HTMLElement | null = document.getElementById('delete');
+        if(deleteButton) {
+            deleteButton.addEventListener('click', (e) => {
                 e.preventDefault();
-                this.showPopup(e.currentTarget.dataset.id);
+                this.deleteOperation(id);
             });
         }
     }
 
-    showPopup(id){
-        document.getElementById('popUp').style.display = 'flex';
-        document.getElementById('delete').addEventListener('click', (e) => {
-            e.preventDefault();
-            this.deleteOperation(id);
-        });
-        // document.getElementById('delete').href = '/income&expenses/delete?id=' + id;
+    private hidePopup():void{
+        const popUp: HTMLElement | null = document.getElementById('popUp');
+        if(popUp) {
+            popUp.style.display = 'none';
+        }
     }
 
-    hidePopup(){
-        document.getElementById('popUp').style.display = 'none';
-    }
-
-    async deleteOperation(id) {
+    private async deleteOperation(id: number): Promise<void> {
         const result = await HttpUtils.request('/operations/' + id, 'DELETE', true);
         if (result.redirect) {
             return this.openNewRoute(result.redirect);
@@ -119,5 +142,3 @@ class CommonList {
         return this.openNewRoute('/income&expenses');
     }
 }
-
-module.exports = CommonList;

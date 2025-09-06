@@ -1,41 +1,52 @@
-const Chart = require('chart.js/auto');
-const HttpUtils = require('./../utils/http-utils');
+// const Chart = require("chart.js/auto");
 
-class Main {
-    constructor(openNewRoute) {
+// @ts-ignore
+import Chart from "chart.js/auto";
+
+import {HttpUtils} from '../utils/http-utils';
+import type {OperationType} from "../types/operation.type";
+
+
+export class Main {
+    readonly openNewRoute: any;
+    readonly incomeChart: HTMLCanvasElement | null;
+    readonly expenseChart: HTMLCanvasElement | null;
+    private incomeChartInstance: Chart | null;
+    private expenseChartInstance: Chart | null;
+    private periodButtons: NodeListOf<HTMLButtonElement>;
+    private dateFrom: HTMLInputElement;
+    private dateTo: HTMLInputElement;
+
+    constructor(openNewRoute: any) {
         this.openNewRoute = openNewRoute;
 
-        this.incomeChart = document.getElementById('incomeChart');
-        this.expenseChart = document.getElementById('expenseChart');
-
+        this.incomeChart = document.getElementById('incomeChart') as HTMLCanvasElement | null;
+        this.expenseChart = document.getElementById('expenseChart') as HTMLCanvasElement | null;
         this.incomeChartInstance = null;
         this.expenseChartInstance = null;
-
-        this.periodButtons = document.querySelectorAll('.filter button[data-period]');
-        this.dateFrom = document.getElementById('dateFrom');
-        this.dateTo = document.getElementById('dateTo');
+        this.periodButtons = document.querySelectorAll('.filter button[data-period]') as NodeListOf<HTMLButtonElement>;
+        this.dateFrom = document.getElementById('dateFrom') as HTMLInputElement;
+        this.dateTo = document.getElementById('dateTo') as HTMLInputElement;
 
         this.periodButtons.forEach(btn => {
-            btn.addEventListener('click', (e) => {
+            btn.addEventListener('click', (e: MouseEvent): void => {
                 e.preventDefault();
                 this.periodButtons.forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
-
-                const period = btn.dataset.period;
+                const period: string | undefined = btn.dataset.period as string;
                 this.getOperations(period);
             });
         });
 
-        this.dateFrom.addEventListener('change', () => this.onCustomDateChange());
-        this.dateTo.addEventListener('change', () => this.onCustomDateChange());
-
+        this.dateFrom.addEventListener('change', (): void  => this.onCustomDateChange());
+        this.dateTo.addEventListener('change', (): void  => this.onCustomDateChange());
         this.getOperations('today');
     }
 
-    onCustomDateChange() {
+    private onCustomDateChange(): void {
         this.periodButtons.forEach(b => b.classList.remove('active'));
-        const intervalBtn = document.querySelector('.filter button[data-period="interval"]');
-        intervalBtn.classList.add('active');
+        const intervalBtn: HTMLButtonElement | null = document.querySelector('.filter button[data-period="interval"]');
+        if(intervalBtn) intervalBtn.classList.add('active');
 
         if (this.dateFrom.value && this.dateTo.value) {
             this.getOperations('interval');
@@ -44,8 +55,8 @@ class Main {
         }
     }
 
-    async getOperations(period) {
-        let url = '/operations?period=' + period;
+    private async getOperations(period: string): Promise<any> {
+        let url: string = '/operations?period=' + period;
 
         if (period === 'interval') {
             const from = this.dateFrom.value;
@@ -56,22 +67,22 @@ class Main {
             if (params.length > 0) url += '&' + params.join('&');
         }
 
-        const result = await HttpUtils.request(url);
+        const result: any = await HttpUtils.request(url);
         if (result.redirect) return this.openNewRoute(result.redirect);
         if (result.error || !result.response || result.response.error) {
             return alert('Возникла ошибка, обратитесь в поддержку');
         }
 
-        const operations = result.response;
+        const operations: OperationType[]  = result.response;
         this.renderCharts(operations);
     }
 
-    renderCharts(operations) {
-        const incomeData = {};
-        const expenseData = {};
+    private renderCharts(operations: OperationType[]): void {
+        const incomeData: Record<string, number> = {};
+        const expenseData: Record<string, number> = {};
 
         operations.forEach(op => {
-            const category = op.category || 'Без категории';
+            const category: string = op.category || 'Без категории';
 
             if (op.type === 'income') {
                 incomeData[category] = (incomeData[category] || 0) + op.amount;
@@ -84,7 +95,7 @@ class Main {
         this.showExpenseChart(expenseData);
     }
 
-    showIncomeChart(data) {
+    private showIncomeChart(data: Record<string, number>) {
         const chartData = {
             labels: Object.keys(data),
             datasets: [{
@@ -102,7 +113,7 @@ class Main {
         });
     }
 
-    showExpenseChart(data) {
+    private showExpenseChart(data: Record<string, number>) {
         const chartData = {
             labels: Object.keys(data),
             datasets: [{
@@ -120,5 +131,3 @@ class Main {
         });
     }
 }
-
-module.exports = Main;

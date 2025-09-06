@@ -1,12 +1,15 @@
-const config = require("../config/config");
-const HttpUtils = require("./http-utils");
+import config from "../config/config";
+import type {UserInfoType} from "../types/user-info.type";
+import {AuthKeysType} from "../types/auth-keys.type";
+import type {AuthInfoMap} from "../types/auth-info.type";
 
-class AuthUtils {
-    static accessTokenKey = 'accessToken';
-    static refreshTokenKey = 'refreshToken';
-    static userInfoKey = 'userInfo';
 
-    static setAuthInfo(accessToken, refreshToken, userInfo = null) {
+export class AuthUtils {
+    static accessTokenKey: AuthKeysType = AuthKeysType.accessTokenKey;
+    static refreshTokenKey: AuthKeysType = AuthKeysType.refreshTokenKey;
+    static userInfoKey: AuthKeysType = AuthKeysType.userInfoKey;
+
+    public static setAuthInfo(accessToken:string, refreshToken:string, userInfo: UserInfoType | null = null): void{
         localStorage.setItem(this.accessTokenKey, accessToken);
         localStorage.setItem(this.refreshTokenKey, refreshToken);
         if (userInfo) {
@@ -14,29 +17,31 @@ class AuthUtils {
         }
     }
 
-    static removeAuthInfo() {
+    public static removeAuthInfo(): void {
         localStorage.removeItem(this.accessTokenKey);
         localStorage.removeItem(this.refreshTokenKey);
         localStorage.removeItem(this.userInfoKey);
     }
 
-    static getAuthInfo(key = null) {
-        if (key && [this.accessTokenKey, this.refreshTokenKey, this.userInfoKey].includes(key)) {
+    public static getAuthInfo(key: AuthKeysType): string | null;
+    public static getAuthInfo(): AuthInfoMap;
+    public static getAuthInfo(key?: AuthKeysType | null): string | null | AuthInfoMap {
+        if (key) {
             return localStorage.getItem(key);
         } else {
             return {
                 [this.accessTokenKey]: localStorage.getItem(this.accessTokenKey),
                 [this.refreshTokenKey]: localStorage.getItem(this.refreshTokenKey),
                 [this.userInfoKey]: localStorage.getItem(this.userInfoKey),
-            }
+            } as AuthInfoMap;
         }
     }
 
-    static async updateRefreshToken() {
-        let result = false;
-        const refreshToken = this.getAuthInfo(this.refreshTokenKey);
+    public static async updateRefreshToken():Promise<boolean> {
+        let result: boolean = false;
+        const refreshToken: string | null = this.getAuthInfo(this.refreshTokenKey) as string | null;
         if (refreshToken) {
-            const response = await fetch(config.api + '/refresh', {
+            const response: Response = await fetch(config.api + '/refresh', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
@@ -45,7 +50,7 @@ class AuthUtils {
                 body: JSON.stringify({refreshToken: refreshToken})
             });
             if (response && response.status === 200) {
-                const tokens = await response.json();
+                const tokens: { accessToken: string, refreshToken: string, error?: boolean } = await response.json();
                 if (tokens && !tokens.error) {
                     this.setAuthInfo(tokens.accessToken, tokens.refreshToken);
                     result = true;
@@ -58,5 +63,3 @@ class AuthUtils {
         return result;
     }
 }
-
-module.exports = AuthUtils;

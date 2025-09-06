@@ -1,6 +1,6 @@
 const host = 'http://localhost:3000';
 
-module.exports = {
+export default {
     host: host,
     api: host + '/api',
 }

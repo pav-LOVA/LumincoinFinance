@@ -1,14 +1,20 @@
-const HttpUtils = require("../../../utils/http-utils");
+import {HttpUtils} from "../../../utils/http-utils";
 
-class ExpensesList {
-    constructor(openNewRoute) {
+export class ExpensesList {
+    readonly openNewRoute: any;
+
+    constructor(openNewRoute: any) {
         this.openNewRoute = openNewRoute;
-        document.getElementById('nonDelete').addEventListener('click', this.hidePopup.bind(this));
+
+        const nonDelete: HTMLElement | null = document.getElementById('nonDelete');
+        if(nonDelete) {
+            nonDelete.addEventListener('click', this.hidePopup.bind(this));
+        }
 
         this.getCategoriesExpenses().then();
     }
 
-    async getCategoriesExpenses() {
+    private async getCategoriesExpenses(): Promise<void> {
         const result = await HttpUtils.request('/categories/expense');
         if (result.redirect) {
             return this.openNewRoute(result.redirect);
@@ -20,25 +26,25 @@ class ExpensesList {
         this.showRecords(result.response);
     }
 
-    showRecords(categories) {
-        const recordsElement = document.querySelector('.card-items');
-        for (let i = 0; i < categories.length; i++) {
-            const cardItemElement = document.createElement('div');
+    private showRecords(categories:any):void {
+        const recordsElement: HTMLElement | null = document.querySelector('.card-items');
+        for (let i: number = 0; i < categories.length; i++) {
+            const cardItemElement: HTMLDivElement = document.createElement('div');
             cardItemElement.className = 'card-item border border-secondary-subtle rounded-2';
 
-            const cardTitle = document.createElement('div');
+            const cardTitle: HTMLDivElement = document.createElement('div');
             cardTitle.className = 'card-title';
             cardTitle.innerText = categories[i].title;
 
-            const buttonContainerElement = document.createElement('div');
+            const buttonContainerElement: HTMLDivElement = document.createElement('div');
             buttonContainerElement.className = 'mt-2';
 
-            const editButtonElement = document.createElement('a');
+            const editButtonElement: HTMLAnchorElement = document.createElement('a');
             editButtonElement.className = 'btn btn-primary btn-sm btn-edit me-1';
             editButtonElement.innerText = 'Редактировать';
             editButtonElement.href = '/expenses/edit?id=' + categories[i].id;
 
-            const deleteButtonElement = document.createElement('a');
+            const deleteButtonElement: HTMLAnchorElement = document.createElement('a');
             deleteButtonElement.className = 'btn btn-danger btn-sm';
             deleteButtonElement.innerText = 'Удалить';
 
@@ -48,32 +54,44 @@ class ExpensesList {
             buttonContainerElement.appendChild(deleteButtonElement);
             cardItemElement.appendChild(cardTitle);
             cardItemElement.appendChild(buttonContainerElement);
-            recordsElement.appendChild(cardItemElement);
+            if (recordsElement) {
+               recordsElement.appendChild(cardItemElement);
+            }
         }
-        const addCardElement = document.createElement('a');
+        const addCardElement:HTMLAnchorElement = document.createElement('a');
         addCardElement.href = '/expenses/create';
         addCardElement.className = 'card-item card-add border border-secondary-subtle rounded-2';
 
-        const plus = document.createElement('span');
+        const plus:HTMLSpanElement = document.createElement('span');
         plus.textContent = '+';
         addCardElement.appendChild(plus);
-        recordsElement.appendChild(addCardElement);
+        if (recordsElement) {
+            recordsElement.appendChild(addCardElement);
+        }
     }
 
-    showPopup(id) {
-        document.getElementById('popUp').style.display = 'flex';
-        document.getElementById('delete').addEventListener('click', (e) => {
-            e.preventDefault();
-            this.deleteCategory(id);
-        });
-        // document.getElementById('delete').href = '/expenses/delete?id=' + id;
+    private showPopup(id:number):void {
+        const popUp: HTMLElement | null = document.getElementById('popUp');
+        if(popUp) {
+            popUp.style.display = 'flex';
+        }
+        const deleteButton: HTMLElement | null = document.getElementById('delete');
+        if(deleteButton) {
+            deleteButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.deleteCategory(id);
+            });
+        }
     }
 
-    hidePopup() {
-        document.getElementById('popUp').style.display = 'none';
+    private hidePopup():void {
+        const popUp: HTMLElement | null = document.getElementById('popUp');
+        if(popUp) {
+            popUp.style.display = 'none';
+        }
     }
 
-    async deleteCategory(id) {
+    private async deleteCategory(id: number): Promise<void> {
         const result = await HttpUtils.request('/categories/expense/' + id, 'DELETE', true);
         if (result.redirect) {
             return this.openNewRoute(result.redirect);
@@ -84,5 +102,3 @@ class ExpensesList {
         return this.openNewRoute('/expenses');
     }
 }
-
-module.exports = ExpensesList;

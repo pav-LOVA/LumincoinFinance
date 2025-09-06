@@ -1,14 +1,21 @@
-const config = require("../config/config");
-const AuthUtils = require('./../utils/auth-utils');
+import config from "../config/config";
+import {AuthUtils} from "./auth-utils";
 
-class HttpUtils {
-    static async request(url, method = 'GET', useAuth = true, body= null) {
-        const result = {
+
+interface HttpResult<T = any> {
+    error: boolean;
+    response: T | null;
+    redirect?: string;
+}
+
+export class HttpUtils {
+    public static async request<T = any>(url: string, method: string = 'GET', useAuth:boolean = true, body: any = null): Promise<HttpResult<T>> {
+        const result: HttpResult<T> = {
             error: false,
             response: null,
         };
 
-        const params = {
+        const params: any = {
             method: method,
             headers: {
                 'Accept': 'application/json',
@@ -16,7 +23,7 @@ class HttpUtils {
             },
         };
 
-        let token = null;
+        let token: string | null = null;
         if (useAuth) {
             token = AuthUtils.getAuthInfo(AuthUtils.accessTokenKey);
             if (token) {
@@ -28,7 +35,7 @@ class HttpUtils {
             params.body = JSON.stringify(body);
         }
 
-        let response = null;
+        let response: Response | null = null;
         try {
             response = await fetch(config.api + url, params);
             result.response = await response.json();
@@ -55,6 +62,3 @@ class HttpUtils {
         return result;
     }
 }
-
-
-module.exports = HttpUtils;

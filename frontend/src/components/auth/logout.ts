@@ -1,8 +1,10 @@
-const AuthUtils = require("../../utils/auth-utils");
-const HttpUtils = require("../../utils/http-utils");
+import {AuthUtils} from "../../utils/auth-utils";
+import {HttpUtils} from "../../utils/http-utils";
 
-class Logout {
-    constructor(openNewRoute) {
+export class Logout {
+    readonly openNewRoute: any;
+
+    constructor(openNewRoute: any) {
         this.openNewRoute = openNewRoute;
 
         if(!AuthUtils.getAuthInfo(AuthUtils.accessTokenKey) || !AuthUtils.getAuthInfo(AuthUtils.refreshTokenKey)){
@@ -11,7 +13,7 @@ class Logout {
         this.logout().then();
     }
 
-    async logout() {
+    private async logout(): Promise<void> {
         await HttpUtils.request('/logout', 'POST', false,{
             refreshToken: AuthUtils.getAuthInfo(AuthUtils.refreshTokenKey)
         });
@@ -19,5 +21,3 @@ class Logout {
         this.openNewRoute('/login');
     }
 }
-
-module.exports = Logout;

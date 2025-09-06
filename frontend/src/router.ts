@@ -1,30 +1,38 @@
-const FileUtils = require("./utils/file-utils");
-const Main = require("./components/main");
-const Login = require("./components/auth/login");
-const SignUp = require("./components/auth/sign-up");
-const Logout = require("./components/auth/logout");
-const CommonList = require("./components/categories/common/common-list");
-const CommonCreate = require("./components/categories/common/common-create");
-const CommonEdit = require("./components/categories/common/common-edit");
-const CommonDelete = require("./components/categories/common/common-delete");
-const IncomeList = require("./components/categories/income/income-list");
-const IncomeCreate = require("./components/categories/income/income-create");
-const IncomeEdit = require("./components/categories/income/income-edit");
-const IncomeDelete = require("./components/categories/income/income-delete");
-const ExpensesList = require("./components/categories/expenses/expenses-list");
-const ExpensesCreate = require("./components/categories/expenses/expenses-create");
-const ExpensesEdit = require("./components/categories/expenses/expenses-edit");
-const ExpensesDelete = require("./components/categories/expenses/expenses-delete");
-const AuthUtils = require("./utils/auth-utils");
-const BalanceUtils = require('./utils/balance-utils');
+import {FileUtils} from "./utils/file-utils";
+import {Main} from "./components/main";
+import {Login} from "./components/auth/login";
+import {SignUp} from "./components/auth/sign-up";
+import {Logout} from "./components/auth/logout";
+import {CommonList} from "./components/categories/common/common-list";
+import {CommonCreate} from "./components/categories/common/common-create";
+import {CommonEdit} from "./components/categories/common/common-edit";
+import {IncomeList} from "./components/categories/income/income-list";
+import {IncomeCreate} from "./components/categories/income/income-create";
+import {IncomeEdit} from "./components/categories/income/income-edit";
+import {ExpensesList} from "./components/categories/expenses/expenses-list";
+import {ExpensesCreate} from "./components/categories/expenses/expenses-create";
+import {ExpensesEdit} from "./components/categories/expenses/expenses-edit";
+import {AuthUtils} from "./utils/auth-utils";
+import {BalanceUtils} from './utils/balance-utils';
+import type {RouteType} from "./types/route.type";
 
 
-class Router {
+export class Router {
+    readonly titlePageElement: HTMLElement | null;
+    readonly contentPageElement: HTMLElement | null;
+    readonly userNameElement: HTMLElement | null;
+    readonly userBalanceElement: HTMLElement | null;
+    private userName: HTMLElement | null;
+    private userLastName: HTMLElement | null;
+    private routes: RouteType[];
+
     constructor() {
         this.titlePageElement = document.getElementById('title');
         this.contentPageElement = document.getElementById('content');
         this.userName = null;
         this.userLastName = null;
+        this.userNameElement = document.getElementById('user-name');
+        this.userBalanceElement = document.getElementById('balance');
 
         this.initEvents();
         this.routes = [
@@ -35,7 +43,7 @@ class Router {
                 useLayout: '/templates/layout.html',
                 load: () => {
                     new Main(this.openNewRoute.bind(this));
-                }
+                },
             },
             {
                 route: '/404',
@@ -76,6 +84,9 @@ class Router {
             },
             {
                 route: '/logout',
+                title: '',
+                filePathTemplate: '',
+                useLayout: false,
                 load: () => {
                     new Logout(this.openNewRoute.bind(this));
                 },
@@ -107,12 +118,6 @@ class Router {
                     new CommonEdit(this.openNewRoute.bind(this));
                 },
             },
-            // {
-            //     route: '/income&expenses/delete',
-            //     load: () => {
-            //         new CommonDelete(this.openNewRoute.bind(this));
-            //     },
-            // },
             {
                 route: '/income',
                 title: 'Доходы',
@@ -140,12 +145,6 @@ class Router {
                     new IncomeEdit(this.openNewRoute.bind(this));
                 },
             },
-            // {
-            //     route: '/income/delete',
-            //     load: () => {
-            //         new IncomeDelete(this.openNewRoute.bind(this));
-            //     },
-            // },
             {
                 route: '/expenses',
                 title: 'Расходы',
@@ -173,29 +172,23 @@ class Router {
                     new ExpensesEdit(this.openNewRoute.bind(this));
                 },
             },
-            // {
-            //     route: '/expenses/delete',
-            //     load: () => {
-            //         new ExpensesDelete(this.openNewRoute.bind(this));
-            //     },
-            // },
         ];
     }
 
-    initEvents() {
+    private initEvents(): void {
         window.addEventListener('DOMContentLoaded', this.activateRoute.bind(this));
         window.addEventListener('popstate', this.activateRoute.bind(this));
         document.addEventListener('click', this.clickHandler.bind(this));
     }
 
-    async openNewRoute(url) {
-        const currentRoute = window.location.pathname;
+    public async openNewRoute(url: string | URL):Promise<void> {
+        const currentRoute: string | null = window.location.pathname;
         history.pushState({}, '', url);
         await this.activateRoute(null, currentRoute);
     }
 
-    async clickHandler(e) {
-        let element = null;
+    private async clickHandler(e:any): Promise<void> {
+        let element: any = null;
         if (e.target.nodeName === 'A') {
             element = e.target;
         } else if (e.target.parentNode.nodeName === 'A') {
@@ -204,8 +197,8 @@ class Router {
 
         if (element) {
             e.preventDefault();
-            const currentRoute = window.location.pathname;
-            const url = element.href.replace(window.location.origin, '');
+            const currentRoute: string = window.location.pathname;
+            const url: any = element.href.replace(window.location.origin, '');
             if (!url || (currentRoute === url.replace('#', '')) || url.startsWith('javascript:void(0)')) {
                 return;
             }
@@ -213,52 +206,47 @@ class Router {
         }
     }
 
-    async activateRoute(e, oldRoute = null) {
+    private async activateRoute(e:any, oldRoute: string | null = null):Promise<void> {
         if (oldRoute) {
-            const currentRoute = this.routes.find(item => item.route === oldRoute);
-            if (currentRoute.styles && currentRoute.styles.length > 0) {
-                currentRoute.styles.forEach(style => {
-                    document.querySelector(`link[href='/css/${style}']`).remove();
-                })
-            }
-            if (currentRoute.scripts && currentRoute.scripts.length > 0) {
-                currentRoute.scripts.forEach(script => {
-                    document.querySelector(`script[src='/js/${script}']`).remove();
-                })
-            }
-            if (currentRoute.unload && typeof currentRoute.unload === 'function') {
-                currentRoute.unload();
+            const currentRoute: RouteType | undefined = this.routes.find(item => item.route === oldRoute);
+            if (currentRoute) {
+                if (currentRoute.styles && currentRoute.styles.length > 0) {
+                    currentRoute.styles.forEach(style => {
+                        const styleElement: Element | null = document.querySelector(`link[href='/css/${style}']`);
+                        if (styleElement) {
+                            styleElement.remove();
+                        }
+                    })
+                }
+                if (currentRoute.unload && typeof currentRoute.unload === 'function') {
+                    currentRoute.unload();
+                }
             }
         }
 
-        const urlRoute = window.location.pathname;
-        const newRoute = this.routes.find(item => item.route === urlRoute);
+        const urlRoute: string = window.location.pathname;
+        const newRoute: RouteType | undefined = this.routes.find(item => item.route === urlRoute);
 
         if (newRoute) {
             if (newRoute.styles && newRoute.styles.length > 0) {
                 newRoute.styles.forEach(style => {
-                    FileUtils.loadPageStyle('/css/' + style)
-                })
+                    FileUtils.loadPageStyle('/css/' + style, '');
+                });
             }
-            if (newRoute.scripts && newRoute.scripts.length > 0) {
-                for (const script of newRoute.scripts) {
-                    await FileUtils.loadPageScript('/js/' + script);
-                }
-            }
-            if (newRoute.title) {
+            if (newRoute.title && this.titlePageElement) {
                 this.titlePageElement.innerHTML = newRoute.title + ' | Lumincoin Finance';
             }
 
             if (newRoute.filePathTemplate) {
-                let contentBlock = this.contentPageElement;
-                if (newRoute.useLayout) {
+                let contentBlock: HTMLElement | null = this.contentPageElement;
+
+                if (newRoute.useLayout && this.contentPageElement) {
                     this.contentPageElement.innerHTML = await fetch(newRoute.useLayout).then(response => response.text());
                     contentBlock = document.getElementById('content-layout');
                     document.body.classList.add('sidebar-mini');
                     document.body.classList.add('layout-fixed');
 
-                    this.userNameElement = document.getElementById('user-name');
-                        let userInfo = AuthUtils.getAuthInfo(AuthUtils.userInfoKey);
+                        let userInfo: any = AuthUtils.getAuthInfo(AuthUtils.userInfoKey);
                         if(userInfo) {
                             userInfo = JSON.parse(userInfo);
                             if(userInfo.name && userInfo.lastName) {
@@ -266,15 +254,21 @@ class Router {
                                 this.userLastName = userInfo.lastName;
                             }
                         }
-                    this.userNameElement.innerText = this.userName + ' ' + this.userLastName;
-                    this.userNameElement = document.getElementById('balance').innerText = await BalanceUtils.getBalance() + '$';
+                        if (this.userNameElement) {
+                            this.userNameElement.innerText = this.userName + ' ' + this.userLastName;
+                        }
+                        if (this.userBalanceElement) {
+                            this.userBalanceElement.innerText = await BalanceUtils.getBalance() + '$';
+                        }
 
                     this.activateMenuItem(newRoute);
                 } else {
                     document.body.classList.remove('sidebar-mini');
                     document.body.classList.remove('layout-fixed');
                 }
-                contentBlock.innerHTML = await fetch(newRoute.filePathTemplate).then(response => response.text());
+                if(contentBlock) {
+                    contentBlock.innerHTML = await fetch(newRoute.filePathTemplate).then(response => response.text());
+                }
             }
 
             if (newRoute.load && typeof newRoute.load === 'function') {
@@ -287,9 +281,9 @@ class Router {
         }
     }
 
-    activateMenuItem(route) {
+    private activateMenuItem(route: any): void {
         document.querySelectorAll('.sidebar .nav-link').forEach(item => {
-            const href = item.getAttribute('href');
+            const href: string | null = item.getAttribute('href');
             if ((route.route.includes(href) && href !== '/') || (route.route === '/' && href === '/')) {
                 item.classList.add('active');
             } else {
@@ -298,5 +292,3 @@ class Router {
         });
     }
 }
-
-module.exports = Router;

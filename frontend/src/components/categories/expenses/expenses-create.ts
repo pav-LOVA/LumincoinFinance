@@ -1,33 +1,40 @@
-const HttpUtils = require('./../../../utils/http-utils');
-const AuthUtils = require("../../../utils/auth-utils");
+import {HttpUtils} from "../../../utils/http-utils";
+import {AuthUtils} from "../../../utils/auth-utils";
 
-class ExpensesCreate {
-    constructor(openNewRoute) {
+
+export class ExpensesCreate {
+    readonly openNewRoute: any;
+    readonly expenseCategoryElement: HTMLInputElement | undefined;
+
+    constructor(openNewRoute: any) {
         this.openNewRoute = openNewRoute;
         if (!AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
             return this.openNewRoute('/login');
         }
 
-        document.getElementById('saveButton').addEventListener('click', this.saveCategory.bind(this));
+        const saveButton: HTMLElement | null = document.getElementById('saveButton');
+        if(saveButton) {
+            saveButton.addEventListener('click', this.saveCategory.bind(this));
+        }
 
-        this.expenseCategoryElement = document.getElementById('expenseCategory');
+        this.expenseCategoryElement = document.getElementById('expenseCategory') as HTMLInputElement;
     }
 
-    validateForm() {
-        let isValid = true;
-        if (this.expenseCategoryElement.value) {
+    private validateForm(): boolean {
+        let isValid: boolean  = true;
+        if (this.expenseCategoryElement && this.expenseCategoryElement.value) {
             this.expenseCategoryElement.classList.remove('is-invalid');
-        } else {
+        } else if (this.expenseCategoryElement) {
             this.expenseCategoryElement.classList.add('is-invalid');
             isValid = false;
         }
         return isValid;
     }
 
-    async saveCategory(e) {
+    private async saveCategory(e:any): Promise<any> {
         e.preventDefault();
 
-        if (this.validateForm()) {
+        if (this.expenseCategoryElement && this.validateForm()) {
             const createData= {
                 title: this.expenseCategoryElement.value,
             }
@@ -44,5 +51,3 @@ class ExpensesCreate {
         }
     }
 }
-
-module.exports = ExpensesCreate;
