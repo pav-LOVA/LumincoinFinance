@@ -1,13 +1,14 @@
 import {HttpUtils} from "../../../utils/http-utils";
 import {AuthUtils} from "../../../utils/auth-utils";
 import type {OperationType} from "../../../types/operation-type.type";
-import {CategoryType} from "../../../types/category-type.type";
+import {Category} from "../../../types/category-type.type";
+import {OperationResponseType} from "../../../types/operation-response.type";
 
 
 export class CommonEdit {
-    readonly openNewRoute: any;
-    private incomeElement: HTMLSelectElement | undefined;
-    private expenseElement: HTMLSelectElement | undefined;
+    readonly openNewRoute: (url: string | URL) => Promise<void>;
+    readonly incomeElement: HTMLSelectElement | undefined;
+    readonly expenseElement: HTMLSelectElement | undefined;
     readonly operationElement: HTMLSelectElement | undefined;
     readonly categoryElement: HTMLInputElement | undefined;
     readonly categoryErrorElement: HTMLElement | undefined;
@@ -19,16 +20,23 @@ export class CommonEdit {
     readonly commentErrorElement: HTMLElement | undefined;
     private operationOriginalData: OperationType | undefined;
 
-    constructor(openNewRoute: any) {
+    constructor(openNewRoute: (url: string | URL) => Promise<void>) {
         this.openNewRoute = openNewRoute;
         if (!AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
-            return this.openNewRoute('/login');
+            this.openNewRoute('/login');
+            return;
         }
 
         const urlParams = new URLSearchParams(window.location.search);
-        const id: unknown | null = urlParams.get('id');
-        if (!id) {
-            return this.openNewRoute('/income&expenses/');
+        const idParam: string | null = urlParams.get('id');
+        if (!idParam) {
+            this.openNewRoute('/income&expenses/');
+            return;
+        }
+        const id: number = Number(idParam);
+        if (isNaN(id)) {
+            this.openNewRoute('/income&expenses/');
+            return;
         }
 
         this.incomeElement = document.getElementById('income-element') as HTMLSelectElement;
@@ -48,16 +56,12 @@ export class CommonEdit {
         if(updateButton) {
             updateButton.addEventListener('click', this.updateOperation.bind(this));
         }
-
         this.getOperation(id).then();
     }
 
-    private async getOperation(id:unknown):Promise<any> {
+    private async getOperation(id:number):Promise<any> {
         const result = await HttpUtils.request('/operations/' + id);
-        if (result.redirect) {
-            return this.openNewRoute(result.redirect);
-        }
-        if (result.error || !result.response || (result.response && (result.response.error))) {
+        if (result.error || !result.response) {
             return alert('Возникла ошибка, обратитесь в поддержку');
         }
 
@@ -93,9 +97,9 @@ export class CommonEdit {
     }
 
     private showOperation(operation: any): void {
-        if (this.expenseElement && operation.type === CategoryType.expense) {
+        if (this.expenseElement && operation.type === Category.expense) {
             this.expenseElement.setAttribute("selected", "selected");
-        } else if (this.incomeElement && operation.type === CategoryType.income) {
+        } else if (this.incomeElement && operation.type === Category.income) {
             this.incomeElement.setAttribute("selected", "selected");
         }
         if(this.amountElement) {
@@ -146,7 +150,7 @@ export class CommonEdit {
         return isValid;
     }
 
-    private async updateOperation(e: any): Promise<any> {
+    private async updateOperation(e: MouseEvent): Promise<any> {
         e.preventDefault();
 
         if (this.operationElement && this.amountElement && this.dateElement && this.commentElement && this.categoryElement && this.validateForm() && this.operationOriginalData) {

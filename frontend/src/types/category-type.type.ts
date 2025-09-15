@@ -1,4 +1,4 @@
-export enum CategoryType {
+export enum Category {
     income = 'income',
     expense = 'expense',
 }

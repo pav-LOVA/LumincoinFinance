@@ -22,8 +22,8 @@ export class Router {
     readonly contentPageElement: HTMLElement | null;
     readonly userNameElement: HTMLElement | null;
     readonly userBalanceElement: HTMLElement | null;
-    private userName: HTMLElement | null;
-    private userLastName: HTMLElement | null;
+    private userName: string | null;
+    private userLastName: string | null;
     private routes: RouteType[];
 
     constructor() {
@@ -182,17 +182,18 @@ export class Router {
     }
 
     public async openNewRoute(url: string | URL):Promise<void> {
-        const currentRoute: string | null = window.location.pathname;
+        const currentRoute: string = window.location.pathname;
         history.pushState({}, '', url);
         await this.activateRoute(null, currentRoute);
     }
 
-    private async clickHandler(e:any): Promise<void> {
-        let element: any = null;
-        if (e.target.nodeName === 'A') {
-            element = e.target;
-        } else if (e.target.parentNode.nodeName === 'A') {
-            element = e.target.parentNode;
+    private async clickHandler(e:MouseEvent): Promise<void> {
+        let element: HTMLAnchorElement | null = null;
+        const target = e.target as HTMLElement;
+        if (target.nodeName === 'A') {
+            element = target as HTMLAnchorElement;
+        } else if (target.parentNode && (target.parentNode as HTMLElement).nodeName === 'A') {
+            element = target.parentNode as HTMLAnchorElement;
         }
 
         if (element) {
@@ -206,7 +207,7 @@ export class Router {
         }
     }
 
-    private async activateRoute(e:any, oldRoute: string | null = null):Promise<void> {
+    private async activateRoute(_: Event | null, oldRoute: string | null = null):Promise<void> {
         if (oldRoute) {
             const currentRoute: RouteType | undefined = this.routes.find(item => item.route === oldRoute);
             if (currentRoute) {
@@ -230,7 +231,9 @@ export class Router {
         if (newRoute) {
             if (newRoute.styles && newRoute.styles.length > 0) {
                 newRoute.styles.forEach(style => {
-                    FileUtils.loadPageStyle('/css/' + style, '');
+                    const firstLink = document.querySelector('link[rel="stylesheet"]');
+                    FileUtils.loadPageStyle('/css/' + style, firstLink);
+                    // FileUtils.loadPageStyle('/css/' + style, '');
                 });
             }
             if (newRoute.title && this.titlePageElement) {
@@ -243,8 +246,7 @@ export class Router {
                 if (newRoute.useLayout && this.contentPageElement) {
                     this.contentPageElement.innerHTML = await fetch(newRoute.useLayout).then(response => response.text());
                     contentBlock = document.getElementById('content-layout');
-                    document.body.classList.add('sidebar-mini');
-                    document.body.classList.add('layout-fixed');
+                    document.body.classList.add('sidebar-mini', 'layout-fixed');
 
                         let userInfo: any = AuthUtils.getAuthInfo(AuthUtils.userInfoKey);
                         if(userInfo) {
@@ -263,8 +265,7 @@ export class Router {
 
                     this.activateMenuItem(newRoute);
                 } else {
-                    document.body.classList.remove('sidebar-mini');
-                    document.body.classList.remove('layout-fixed');
+                    document.body.classList.remove('sidebar-mini', 'layout-fixed');
                 }
                 if(contentBlock) {
                     contentBlock.innerHTML = await fetch(newRoute.filePathTemplate).then(response => response.text());
@@ -281,10 +282,10 @@ export class Router {
         }
     }
 
-    private activateMenuItem(route: any): void {
+    private activateMenuItem(route: RouteType): void {
         document.querySelectorAll('.sidebar .nav-link').forEach(item => {
             const href: string | null = item.getAttribute('href');
-            if ((route.route.includes(href) && href !== '/') || (route.route === '/' && href === '/')) {
+            if (href && (route.route.includes(href) && href !== '/') || (route.route === '/' && href === '/')) {
                 item.classList.add('active');
             } else {
                 item.classList.remove('active');

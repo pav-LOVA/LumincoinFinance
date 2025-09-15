@@ -1,22 +1,30 @@
 import {HttpUtils} from "../../../utils/http-utils";
 import {AuthUtils} from "../../../utils/auth-utils";
-import type {CategoryType} from "../../../types/category.type";
+import {CategoriesResponseType, CategoryType} from "../../../types/categories.type";
+
 
 export class IncomeEdit {
-    readonly openNewRoute: any;
+    readonly openNewRoute: (url: string | URL) => Promise<void>;
     readonly incomeCategoryElement: HTMLInputElement | undefined;
     private categoryOriginalData: CategoryType | undefined;
 
-    constructor(openNewRoute: any) {
+    constructor(openNewRoute: (url: string | URL) => Promise<void>) {
         this.openNewRoute = openNewRoute;
         if (!AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
-            return this.openNewRoute('/login');
+            this.openNewRoute('/login');
+            return;
         }
 
         const urlParams = new URLSearchParams(window.location.search);
-        const id: unknown | null = urlParams.get('id');
-        if (!id) {
-            return this.openNewRoute('/income');
+        const idParam: string | null = urlParams.get('id');
+        if (!idParam) {
+            this.openNewRoute('/income');
+            return;
+        }
+        const id: number = Number(idParam);
+        if (isNaN(id)) {
+            this.openNewRoute('/income');
+            return;
         }
 
         const updateButton: HTMLElement | null = document.getElementById('updateButton');
@@ -28,7 +36,7 @@ export class IncomeEdit {
         this.getCategory(id).then();
     }
 
-    private async getCategory(id: unknown): Promise<any> {
+    private async getCategory(id: number): Promise<any> {
         const result = await HttpUtils.request('/categories/income/' + id);
         if (result.redirect) {
             return this.openNewRoute(result.redirect);
@@ -59,7 +67,7 @@ export class IncomeEdit {
         return isValid;
     }
 
-    private async updateCategory(e: any) :Promise<any> {
+    private async updateCategory(e: MouseEvent) :Promise<any> {
         e.preventDefault();
 
         if (this.validateForm()) {
@@ -69,12 +77,8 @@ export class IncomeEdit {
             }
 
             if(this.categoryOriginalData && Object.keys(changedData).length > 0) {
-                const result = await HttpUtils.request('/categories/income/' + this.categoryOriginalData.id, 'PUT', true, changedData);
-                if (result.redirect) {
-                    return this.openNewRoute(result.redirect);
-                }
-
-                if (result.error || !result.response || (result.response && (result.response.error))) {
+                const result: CategoriesResponseType = await HttpUtils.request('/categories/income/' + this.categoryOriginalData.id, 'PUT', true, changedData);
+                if (result.error || !result.response) {
                     return alert('Возникла ошибка, обратитесь в поддержку');
                 }
                 return this.openNewRoute('/income');

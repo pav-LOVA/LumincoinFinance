@@ -1,8 +1,8 @@
-import type {CategoryType} from "./category.type";
+import type {Category} from "./category-type.type";
 
 export type OperationType = {
     "id": number,
-    "type": CategoryType,
+    "type": Category,
     "amount": number,
     "date": Date,
     "comment": string,

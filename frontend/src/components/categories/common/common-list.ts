@@ -1,13 +1,14 @@
 import {HttpUtils} from "../../../utils/http-utils";
+import {OperationResponseType} from "../../../types/operation-response.type";
 
 export class CommonList {
-    readonly openNewRoute: any;
+    readonly openNewRoute: (url: string | URL) => Promise<void>;
     private periodButtons: NodeListOf<HTMLButtonElement>;
     private dateFrom: HTMLInputElement;
     private dateTo: HTMLInputElement;
 
-    constructor(openNewRoute: any) {
-        this.openNewRoute=openNewRoute;
+    constructor(openNewRoute: (url: string | URL) => Promise<void>) {
+        this.openNewRoute = openNewRoute;
         this.periodButtons = document.querySelectorAll('.filter button[data-period]');
         this.dateFrom = document.getElementById('dateFrom') as HTMLInputElement;
         this.dateTo = document.getElementById('dateTo') as HTMLInputElement;
@@ -18,10 +19,10 @@ export class CommonList {
         }
 
         this.getOperations();
-        this.periodButtons.forEach(btn => {
+        this.periodButtons.forEach((btn: HTMLButtonElement) => {
             btn.addEventListener('click', (e: any):void => {
                 e.preventDefault();
-                this.periodButtons.forEach(btn => btn.classList.remove('active'));
+                this.periodButtons.forEach((btn: HTMLButtonElement) => btn.classList.remove('active'));
                 btn.classList.add('active');
 
                 const period: string | undefined = btn.dataset.period as string;
@@ -32,12 +33,12 @@ export class CommonList {
         const todayBtn: Element | null = document.querySelector('.filter button[data-period="today"]');
         if (todayBtn) todayBtn.classList.add('active');
 
-        this.dateFrom.addEventListener('change', () => this.onCustomDateChange());
-        this.dateTo.addEventListener('change', () => this.onCustomDateChange());
+        this.dateFrom.addEventListener('change', (): void => this.onCustomDateChange());
+        this.dateTo.addEventListener('change', (): void => this.onCustomDateChange());
     }
 
     private onCustomDateChange(): void {
-        this.periodButtons.forEach(btn => btn.classList.remove('active'));
+        this.periodButtons.forEach((btn: HTMLButtonElement) => btn.classList.remove('active'));
         const intervalBtn: Element | null = document.querySelector('.filter button[data-period="interval"]');
         if (intervalBtn) {
             intervalBtn.classList.add('active');
@@ -51,8 +52,8 @@ export class CommonList {
         let url: string = '/operations?period=' + period;
 
         if (period === 'interval') {
-            const from = this.dateFrom.value;
-            const to = this.dateTo.value;
+            const from: string = this.dateFrom.value;
+            const to: string = this.dateTo.value;
             const params = [];
             if (from) params.push(`dateFrom=${from}`);
             if (to) params.push(`dateTo=${to}`);
@@ -132,11 +133,8 @@ export class CommonList {
     }
 
     private async deleteOperation(id: number): Promise<void> {
-        const result = await HttpUtils.request('/operations/' + id, 'DELETE', true);
-        if (result.redirect) {
-            return this.openNewRoute(result.redirect);
-        }
-        if (result.error || !result.response || (result.response && (result.response.error))) {
+        const result : OperationResponseType = await HttpUtils.request('/operations/' + id, 'DELETE', true);
+        if (result.error || !result.response) {
             return alert('Возникла ошибка, обратитесь в поддержку');
         }
         return this.openNewRoute('/income&expenses');

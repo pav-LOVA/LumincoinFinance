@@ -1,9 +1,9 @@
 import {HttpUtils} from "../../../utils/http-utils";
 
 export class ExpensesList {
-    readonly openNewRoute: any;
+    readonly openNewRoute: (url: string | URL) => Promise<void>;
 
-    constructor(openNewRoute: any) {
+    constructor(openNewRoute: (url: string | URL) => Promise<void>) {
         this.openNewRoute = openNewRoute;
 
         const nonDelete: HTMLElement | null = document.getElementById('nonDelete');

@@ -1,15 +1,17 @@
 import {HttpUtils} from "../../../utils/http-utils";
 import {AuthUtils} from "../../../utils/auth-utils";
+import {CategoriesResponseType} from "../../../types/categories.type";
 
 
 export class ExpensesCreate {
-    readonly openNewRoute: any;
+    readonly openNewRoute: (url: string | URL) => Promise<void>;
     readonly expenseCategoryElement: HTMLInputElement | undefined;
 
-    constructor(openNewRoute: any) {
+    constructor(openNewRoute: (url: string | URL) => Promise<void>) {
         this.openNewRoute = openNewRoute;
         if (!AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
-            return this.openNewRoute('/login');
+            this.openNewRoute('/login');
+            return;
         }
 
         const saveButton: HTMLElement | null = document.getElementById('saveButton');
@@ -31,20 +33,16 @@ export class ExpensesCreate {
         return isValid;
     }
 
-    private async saveCategory(e:any): Promise<any> {
+    private async saveCategory(e: MouseEvent): Promise<any> {
         e.preventDefault();
 
         if (this.expenseCategoryElement && this.validateForm()) {
             const createData= {
                 title: this.expenseCategoryElement.value,
             }
+            const result: CategoriesResponseType = await HttpUtils.request('/categories/expense/', 'POST', true, createData);
 
-            const result = await HttpUtils.request('/categories/expense/', 'POST', true, createData);
-            if (result.redirect) {
-                return this.openNewRoute(result.redirect);
-            }
-
-            if (result.error || !result.response || (result.response && (result.response.error))) {
+            if (result.error || !result.response) {
                 return alert('Возникла ошибка, обратитесь в поддержку');
             }
             return this.openNewRoute('/expenses');

@@ -1,5 +1,7 @@
+import {Category} from "./category-type.type";
+
 export type OperationType = {
-    type: "income" | "expense";
+    type: Category.income | Category.expense;
     amount: number;
     category?: string;
 };

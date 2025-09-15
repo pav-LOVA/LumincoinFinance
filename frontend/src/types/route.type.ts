@@ -3,7 +3,7 @@ export type RouteType = {
     title: string,
     filePathTemplate: string,
     useLayout: '/templates/layout.html' | false,
-    load?(): void,
-    unload?(): void,
+    load?: () => void,
+    unload?: () => void,
     styles?:string[],
 };

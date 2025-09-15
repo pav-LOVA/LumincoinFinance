@@ -1,29 +1,25 @@
-// const Chart = require("chart.js/auto");
-
-// @ts-ignore
-import Chart from "chart.js/auto";
+import { Chart } from "chart.js/auto";
+import type { Chart as ChartType } from "chart.js";
 
 import {HttpUtils} from '../utils/http-utils';
 import type {OperationType} from "../types/operation.type";
 
 
 export class Main {
-    readonly openNewRoute: any;
+    readonly openNewRoute: (url: string | URL) => Promise<void>;
     readonly incomeChart: HTMLCanvasElement | null;
     readonly expenseChart: HTMLCanvasElement | null;
-    private incomeChartInstance: Chart | null;
-    private expenseChartInstance: Chart | null;
+    private incomeChartInstance: ChartType<"pie", number[], string> | null = null;
+    private expenseChartInstance: ChartType<"pie", number[], string> | null = null;
     private periodButtons: NodeListOf<HTMLButtonElement>;
     private dateFrom: HTMLInputElement;
     private dateTo: HTMLInputElement;
 
-    constructor(openNewRoute: any) {
+    constructor(openNewRoute: (url: string | URL) => Promise<void>) {
         this.openNewRoute = openNewRoute;
 
         this.incomeChart = document.getElementById('incomeChart') as HTMLCanvasElement | null;
         this.expenseChart = document.getElementById('expenseChart') as HTMLCanvasElement | null;
-        this.incomeChartInstance = null;
-        this.expenseChartInstance = null;
         this.periodButtons = document.querySelectorAll('.filter button[data-period]') as NodeListOf<HTMLButtonElement>;
         this.dateFrom = document.getElementById('dateFrom') as HTMLInputElement;
         this.dateTo = document.getElementById('dateTo') as HTMLInputElement;
@@ -106,7 +102,7 @@ export class Main {
 
         if (this.incomeChartInstance) this.incomeChartInstance.destroy();
 
-        this.incomeChartInstance = new Chart(this.incomeChart, {
+        this.incomeChartInstance = new Chart(this.incomeChart as HTMLCanvasElement, {
             type: 'pie',
             data: chartData,
             options: { responsive: true, plugins: { legend: { position: 'top' } } }
@@ -124,7 +120,7 @@ export class Main {
 
         if (this.expenseChartInstance) this.expenseChartInstance.destroy();
 
-        this.expenseChartInstance = new Chart(this.expenseChart, {
+        this.expenseChartInstance = new Chart(this.expenseChart as HTMLCanvasElement, {
             type: 'pie',
             data: chartData,
             options: { responsive: true, plugins: { legend: { position: 'top' } } }

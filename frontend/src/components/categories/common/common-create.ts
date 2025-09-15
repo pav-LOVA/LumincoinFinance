@@ -1,10 +1,12 @@
 import {HttpUtils} from "../../../utils/http-utils";
 import {AuthUtils} from "../../../utils/auth-utils";
-import {CategoryType} from "../../../types/category-type.type";
+import {Category} from "../../../types/category-type.type";
+import {CategoriesResponseType} from "../../../types/categories.type";
+import {OperationResponseType} from "../../../types/operation-response.type";
 
 
 export class CommonCreate {
-    readonly openNewRoute: any;
+    readonly openNewRoute: (url: string | URL) => Promise<void>;
     private incomeElement: HTMLSelectElement | undefined;
     private expenseElement: HTMLSelectElement | undefined;
     readonly operationElement: HTMLSelectElement | undefined;
@@ -17,16 +19,18 @@ export class CommonCreate {
     readonly commentElement: HTMLInputElement | undefined;
     readonly commentErrorElement: HTMLElement | undefined;
 
-    constructor(openNewRoute: any) {
+    constructor(openNewRoute: (url: string | URL) => Promise<void>) {
         this.openNewRoute = openNewRoute;
         if (!AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
-            return this.openNewRoute('/login');
+            this.openNewRoute('/login');
+            return;
         }
 
         const urlParams = new URLSearchParams(window.location.search);
-        const type: CategoryType | null = urlParams.get('type') as CategoryType;
+        const type: Category | null = urlParams.get('type') as Category;
         if (!type) {
-            return this.openNewRoute('/income&expenses');
+            this.openNewRoute('/income&expenses');
+            return;
         }
 
         this.incomeElement = document.getElementById('income-element') as HTMLSelectElement;
@@ -42,9 +46,9 @@ export class CommonCreate {
         this.commentElement = document.getElementById('comment-element') as HTMLInputElement;
         this.commentErrorElement = document.getElementById('comment-element-error') as HTMLElement;
 
-        if (type === CategoryType.expense) {
+        if (type === Category.expense) {
             this.expenseElement.setAttribute("selected", "selected");
-        } else if (type === CategoryType.income) {
+        } else if (type === Category.income) {
             this.incomeElement.setAttribute("selected", "selected");
         }
 
@@ -56,12 +60,10 @@ export class CommonCreate {
         this.getCategories(type);
     }
 
-    private async getCategories(type: CategoryType): Promise<any> {
-        const result = await HttpUtils.request('/categories/' + type);
-        if (result.redirect) {
-            return this.openNewRoute(result.redirect);
-        }
-        if (result.error || !result.response || (result.response && (result.response.error))) {
+    private async getCategories(type: Category): Promise<any> {
+        const result: CategoriesResponseType = await HttpUtils.request('/categories/' + type);
+
+        if (result.error || !result.response || result.response) {
             return alert('Возникла ошибка, обратитесь в поддержку');
         }
         const categories: any = result.response;
@@ -112,7 +114,7 @@ export class CommonCreate {
         return isValid;
     }
 
-    private async saveOperation(e: any): Promise<any> {
+    private async saveOperation(e: MouseEvent): Promise<any> {
         e.preventDefault();
 
         if (this.operationElement && this.amountElement && this.dateElement && this.commentElement && this.categoryElement && this.validateForm()) {
@@ -123,12 +125,9 @@ export class CommonCreate {
                 comment: this.commentElement.value,
                 category_id: parseInt(this.categoryElement.value),
             };
-            const result = await HttpUtils.request('/operations', 'POST', true, createData);
-            if (result.redirect) {
-                return this.openNewRoute(result.redirect);
-            }
+            const result :OperationResponseType = await HttpUtils.request('/operations', 'POST', true, createData);
 
-            if (result.error || !result.response || (result.response && (result.response.error))) {
+            if (result.error || !result.response || result.response) {
                 return alert('Возникла ошибка, обратитесь в поддержку');
             }
             return this.openNewRoute('/income&expenses');

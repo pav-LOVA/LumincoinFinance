@@ -1,9 +1,10 @@
 import {AuthUtils} from "../../utils/auth-utils";
 import {HttpUtils} from"../../utils/http-utils";
+import {SignupResponseType} from "../../types/signup-response.type";
 
 
 export class SignUp {
-    readonly openNewRoute: any;
+    readonly openNewRoute: (url: string | URL) => Promise<void>;
     readonly nameElement: HTMLInputElement | undefined;
     readonly nameErrorElement: HTMLElement | undefined;
     readonly lastNameElement: HTMLInputElement | undefined;
@@ -15,11 +16,12 @@ export class SignUp {
     readonly passwordRepeatElement: HTMLInputElement | undefined;
     readonly passwordRepeatErrorElement: HTMLElement | undefined;
 
-    constructor(openNewRoute:any) {
+    constructor(openNewRoute:(url: string | URL) => Promise<void>) {
         this.openNewRoute = openNewRoute;
 
         if(AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)){
-            return this.openNewRoute('/');
+            this.openNewRoute('/');
+            return;
         }
 
         this.nameElement = document.getElementById('name') as HTMLInputElement;
@@ -82,9 +84,9 @@ export class SignUp {
         return isValid;
     }
 
-    async signUp() {
+    async signUp(): Promise<void> {
         if(this.validateForm() && this.nameElement && this.lastNameElement && this.emailElement && this.passwordElement && this.passwordRepeatElement) {
-            const result = await HttpUtils.request('/signup', 'POST', false, {
+            const result: SignupResponseType = await HttpUtils.request('/signup', 'POST', false, {
                 name: this.nameElement.value,
                 lastName: this.lastNameElement.value,
                 email: this.emailElement.value,

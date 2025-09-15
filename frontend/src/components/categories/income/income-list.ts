@@ -1,9 +1,9 @@
 import {HttpUtils} from "../../../utils/http-utils";
 
 export class IncomeList {
-    readonly openNewRoute: any;
+    readonly openNewRoute: (url: string | URL) => Promise<void>;
 
-    constructor(openNewRoute: any) {
+    constructor(openNewRoute: (url: string | URL) => Promise<void>) {
         this.openNewRoute = openNewRoute;
         const nonDelete: HTMLElement | null = document.getElementById('nonDelete');
         if(nonDelete) {
@@ -16,7 +16,8 @@ export class IncomeList {
     private async getCategoriesIncome():Promise<void> {
         const result = await HttpUtils.request('/categories/income');
         if (result.redirect) {
-            return this.openNewRoute(result.redirect);
+            this.openNewRoute(result.redirect);
+            return;
         }
 
         if (result.error || !result.response || (result.response && (result.response.error))) {

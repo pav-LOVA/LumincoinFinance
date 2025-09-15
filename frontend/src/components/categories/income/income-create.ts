@@ -3,13 +3,14 @@ import {AuthUtils} from "../../../utils/auth-utils";
 
 
 export class IncomeCreate {
-    readonly openNewRoute: any;
+    readonly openNewRoute: (url: string | URL) => Promise<void>;
     readonly incomeCategoryElement: HTMLInputElement | undefined;
 
-    constructor(openNewRoute: any) {
+    constructor(openNewRoute: (url: string | URL) => Promise<void>) {
         this.openNewRoute = openNewRoute;
         if (!AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
-            return this.openNewRoute('/login');
+            this.openNewRoute('/login');
+            return;
         }
 
         const saveButton: HTMLElement | null = document.getElementById('saveButton');

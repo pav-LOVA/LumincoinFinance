@@ -1,9 +1,10 @@
 import {AuthUtils} from '../../utils/auth-utils';
 import {HttpUtils} from '../../utils/http-utils';
+import {LoginResponseType} from "../../types/login-response.type";
 
 
 export class Login {
-    readonly openNewRoute: any;
+    readonly openNewRoute: (url: string | URL) => Promise<void>;
     readonly emailElement: HTMLInputElement | undefined;
     readonly emailErrorElement: HTMLElement | undefined;
     readonly passwordElement: HTMLInputElement | undefined;
@@ -11,11 +12,12 @@ export class Login {
     readonly rememberMeElement: HTMLInputElement | undefined;
     readonly commonErrorElement: HTMLElement | undefined;
 
-    constructor(openNewRoute: any) {
+    constructor(openNewRoute: (url: string | URL) => Promise<void>) {
         this.openNewRoute = openNewRoute;
 
         if (AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
-            return this.openNewRoute('/');
+            this.openNewRoute('/')
+            return;
         }
         this.emailElement = document.getElementById('email') as HTMLInputElement;
         this.emailErrorElement = document.getElementById('email-error') as HTMLElement;
@@ -54,7 +56,7 @@ export class Login {
             this.commonErrorElement.style.display = 'none';
         }
         if (this.validateForm() && this.emailElement && this.passwordElement && this.rememberMeElement) {
-            const result= await HttpUtils.request('/login', 'POST', false, {
+            const result: LoginResponseType = await HttpUtils.request('/login', 'POST', false, {
                 email: this.emailElement.value,
                 password: this.passwordElement.value,
                 rememberMe: this.rememberMeElement.checked,
@@ -64,12 +66,14 @@ export class Login {
                 this.commonErrorElement.style.display = 'block';
                 return;
             }
-            AuthUtils.setAuthInfo(result.response.tokens.accessToken, result.response.tokens.refreshToken, {
-                id: result.response.user.id,
-                name: result.response.user.name,
-                lastName: result.response.user.lastName
-            });
-            this.openNewRoute('/');
+            if (result.response) {
+                AuthUtils.setAuthInfo(result.response.tokens.accessToken, result.response.tokens.refreshToken, {
+                    id: result.response.user.id,
+                    name: result.response.user.name,
+                    lastName: result.response.user.lastName
+                });
+                this.openNewRoute('/');
+            }
         }
     }
 }
