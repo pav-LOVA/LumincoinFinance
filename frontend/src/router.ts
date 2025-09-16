@@ -181,13 +181,13 @@ export class Router {
         document.addEventListener('click', this.clickHandler.bind(this));
     }
 
-    public async openNewRoute(url: string | URL):Promise<void> {
+    public async openNewRoute(url: string | URL): Promise<void> {
         const currentRoute: string = window.location.pathname;
         history.pushState({}, '', url);
         await this.activateRoute(null, currentRoute);
     }
 
-    private async clickHandler(e:MouseEvent): Promise<void> {
+    private async clickHandler(e: MouseEvent): Promise<void> {
         let element: HTMLAnchorElement | null = null;
         const target = e.target as HTMLElement;
         if (target.nodeName === 'A') {
@@ -207,7 +207,7 @@ export class Router {
         }
     }
 
-    private async activateRoute(_: Event | null, oldRoute: string | null = null):Promise<void> {
+    private async activateRoute(_: Event | null, oldRoute: string | null = null): Promise<void> {
         if (oldRoute) {
             const currentRoute: RouteType | undefined = this.routes.find(item => item.route === oldRoute);
             if (currentRoute) {
@@ -233,7 +233,6 @@ export class Router {
                 newRoute.styles.forEach(style => {
                     const firstLink = document.querySelector('link[rel="stylesheet"]');
                     FileUtils.loadPageStyle('/css/' + style, firstLink);
-                    // FileUtils.loadPageStyle('/css/' + style, '');
                 });
             }
             if (newRoute.title && this.titlePageElement) {
@@ -246,28 +245,34 @@ export class Router {
                 if (newRoute.useLayout && this.contentPageElement) {
                     this.contentPageElement.innerHTML = await fetch(newRoute.useLayout).then(response => response.text());
                     contentBlock = document.getElementById('content-layout');
-                    document.body.classList.add('sidebar-mini', 'layout-fixed');
+                    document.body.classList.add('sidebar-mini');
+                    document.body.classList.add('layout-fixed');
 
-                        let userInfo: any = AuthUtils.getAuthInfo(AuthUtils.userInfoKey);
-                        if(userInfo) {
-                            userInfo = JSON.parse(userInfo);
-                            if(userInfo.name && userInfo.lastName) {
-                                this.userName = userInfo.name;
-                                this.userLastName = userInfo.lastName;
-                            }
+                    let userInfo: any = AuthUtils.getAuthInfo(AuthUtils.userInfoKey);
+                    if (userInfo) {
+                        userInfo = JSON.parse(userInfo);
+                        if (userInfo.name && userInfo.lastName) {
+                            this.userName = userInfo.name;
+                            this.userLastName = userInfo.lastName;
                         }
-                        if (this.userNameElement) {
-                            this.userNameElement.innerText = this.userName + ' ' + this.userLastName;
-                        }
-                        if (this.userBalanceElement) {
-                            this.userBalanceElement.innerText = await BalanceUtils.getBalance() + '$';
-                        }
+                    }
+
+                    const userNameElement: HTMLElement | null = document.getElementById('user-name');
+                    const userBalanceElement: HTMLElement | null = document.getElementById('balance');
+
+                    if (userNameElement) {
+                        userNameElement.innerText = this.userName + ' ' + this.userLastName;
+                    }
+                    if (userBalanceElement) {
+                        userBalanceElement.innerText = await BalanceUtils.getBalance() + '$';
+                    }
 
                     this.activateMenuItem(newRoute);
                 } else {
-                    document.body.classList.remove('sidebar-mini', 'layout-fixed');
+                    document.body.classList.remove('sidebar-mini');
+                    document.body.classList.remove('layout-fixed');
                 }
-                if(contentBlock) {
+                if (contentBlock) {
                     contentBlock.innerHTML = await fetch(newRoute.filePathTemplate).then(response => response.text());
                 }
             }

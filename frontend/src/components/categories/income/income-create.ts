@@ -1,5 +1,6 @@
 import {HttpUtils} from "../../../utils/http-utils";
 import {AuthUtils} from "../../../utils/auth-utils";
+import {CategoryResponse} from "../../../interfaces/category-response.interface";
 
 
 export class IncomeCreate {
@@ -32,7 +33,7 @@ export class IncomeCreate {
         return isValid;
     }
 
-    private async saveCategory(e: any): Promise<any> {
+    private async saveCategory(e: MouseEvent): Promise<void> {
         e.preventDefault();
 
         if (this.incomeCategoryElement && this.validateForm()) {
@@ -40,12 +41,9 @@ export class IncomeCreate {
                 title: this.incomeCategoryElement.value,
             }
 
-            const result = await HttpUtils.request('/categories/income/', 'POST', true, createData);
-            if (result.redirect) {
-                return this.openNewRoute(result.redirect);
-            }
+            const result: CategoryResponse = await HttpUtils.request('/categories/income/', 'POST', true, createData);
 
-            if (result.error || !result.response || (result.response && (result.response.error))) {
+            if (result.error || !result.response) {
                 return alert('Возникла ошибка, обратитесь в поддержку');
             }
             return this.openNewRoute('/income');

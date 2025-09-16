@@ -5,14 +5,6 @@ import {AuthUtils} from "./auth-utils";
 export class BalanceUtils {
     static balanceKey: 'balance' = 'balance';
 
-    // static getBalanceInfo(key = null) {
-    //     if (key && this.balanceKey) {
-    //         return localStorage.getItem(key);
-    //     } else {
-    //         return {[this.balanceKey]: localStorage.getItem(this.balanceKey)};
-    //     }
-    // }
-
     static setBalanceInfo(balance: any): void {
             localStorage.setItem(this.balanceKey, balance);
     }

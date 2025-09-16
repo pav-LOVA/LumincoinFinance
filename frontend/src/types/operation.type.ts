@@ -1,7 +1,10 @@
-import {Category} from "./category-type.type";
+import type {Category} from "./category.type";
 
 export type OperationType = {
-    type: Category.income | Category.expense;
-    amount: number;
-    category?: string;
-};
+    "id": number | string,
+    "type": Category,
+    "amount": number,
+    "date": Date,
+    "comment": string,
+    "category": string,
+}

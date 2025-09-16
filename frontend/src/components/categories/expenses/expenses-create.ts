@@ -1,7 +1,6 @@
 import {HttpUtils} from "../../../utils/http-utils";
 import {AuthUtils} from "../../../utils/auth-utils";
-import {CategoriesResponseType} from "../../../types/categories.type";
-
+import {CategoryResponse} from "../../../interfaces/category-response.interface";
 
 export class ExpensesCreate {
     readonly openNewRoute: (url: string | URL) => Promise<void>;
@@ -40,7 +39,7 @@ export class ExpensesCreate {
             const createData= {
                 title: this.expenseCategoryElement.value,
             }
-            const result: CategoriesResponseType = await HttpUtils.request('/categories/expense/', 'POST', true, createData);
+            const result: CategoryResponse = await HttpUtils.request('/categories/expense/', 'POST', true, createData);
 
             if (result.error || !result.response) {
                 return alert('Возникла ошибка, обратитесь в поддержку');

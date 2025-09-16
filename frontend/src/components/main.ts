@@ -2,7 +2,8 @@ import { Chart } from "chart.js/auto";
 import type { Chart as ChartType } from "chart.js";
 
 import {HttpUtils} from '../utils/http-utils';
-import type {OperationType} from "../types/operation.type";
+import type {OperationsType} from "../types/operations.type";
+import {ApiResponse} from "../interfaces/api-response.interface";
 
 
 export class Main {
@@ -51,7 +52,7 @@ export class Main {
         }
     }
 
-    private async getOperations(period: string): Promise<any> {
+    private async getOperations(period: string): Promise<void> {
         let url: string = '/operations?period=' + period;
 
         if (period === 'interval') {
@@ -63,17 +64,16 @@ export class Main {
             if (params.length > 0) url += '&' + params.join('&');
         }
 
-        const result: any = await HttpUtils.request(url);
+        const result: ApiResponse = await HttpUtils.request(url) as ApiResponse;
         if (result.redirect) return this.openNewRoute(result.redirect);
-        if (result.error || !result.response || result.response.error) {
+        if (result.error || !result.response) {
             return alert('Возникла ошибка, обратитесь в поддержку');
         }
-
-        const operations: OperationType[]  = result.response;
+        const operations: OperationsType[]  = result.response;
         this.renderCharts(operations);
     }
 
-    private renderCharts(operations: OperationType[]): void {
+    private renderCharts(operations: OperationsType[]): void {
         const incomeData: Record<string, number> = {};
         const expenseData: Record<string, number> = {};
 
@@ -101,7 +101,6 @@ export class Main {
         };
 
         if (this.incomeChartInstance) this.incomeChartInstance.destroy();
-
         this.incomeChartInstance = new Chart(this.incomeChart as HTMLCanvasElement, {
             type: 'pie',
             data: chartData,
@@ -119,7 +118,6 @@ export class Main {
         };
 
         if (this.expenseChartInstance) this.expenseChartInstance.destroy();
-
         this.expenseChartInstance = new Chart(this.expenseChart as HTMLCanvasElement, {
             type: 'pie',
             data: chartData,

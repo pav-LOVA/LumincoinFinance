@@ -1,10 +1,13 @@
-export interface SignupResponseType {
+export interface LoginResponse {
     error?: boolean;
     message?: string;
     response?: {
+        tokens: {
+            accessToken: string;
+            refreshToken: string;
+        };
         user: {
             id: number;
-            email: string;
             name: string;
             lastName: string;
         };

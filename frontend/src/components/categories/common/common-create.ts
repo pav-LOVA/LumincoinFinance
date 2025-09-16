@@ -1,8 +1,8 @@
 import {HttpUtils} from "../../../utils/http-utils";
 import {AuthUtils} from "../../../utils/auth-utils";
-import {Category} from "../../../types/category-type.type";
-import {CategoriesResponseType} from "../../../types/categories.type";
-import {OperationResponseType} from "../../../types/operation-response.type";
+import {Category} from "../../../types/category.type";
+import {CategoryResponse} from "../../../interfaces/category-response.interface";
+import {OperationResponse} from "../../../interfaces/operation-response.interface";
 
 
 export class CommonCreate {
@@ -61,9 +61,9 @@ export class CommonCreate {
     }
 
     private async getCategories(type: Category): Promise<any> {
-        const result: CategoriesResponseType = await HttpUtils.request('/categories/' + type);
+        const result: CategoryResponse = await HttpUtils.request('/categories/' + type);
 
-        if (result.error || !result.response || result.response) {
+        if (result.error || !result.response) {
             return alert('Возникла ошибка, обратитесь в поддержку');
         }
         const categories: any = result.response;
@@ -114,7 +114,7 @@ export class CommonCreate {
         return isValid;
     }
 
-    private async saveOperation(e: MouseEvent): Promise<any> {
+    private async saveOperation(e: MouseEvent): Promise<void> {
         e.preventDefault();
 
         if (this.operationElement && this.amountElement && this.dateElement && this.commentElement && this.categoryElement && this.validateForm()) {
@@ -125,9 +125,9 @@ export class CommonCreate {
                 comment: this.commentElement.value,
                 category_id: parseInt(this.categoryElement.value),
             };
-            const result :OperationResponseType = await HttpUtils.request('/operations', 'POST', true, createData);
+            const result :OperationResponse = await HttpUtils.request('/operations', 'POST', true, createData);
 
-            if (result.error || !result.response || result.response) {
+            if (result.error || !result.response) {
                 return alert('Возникла ошибка, обратитесь в поддержку');
             }
             return this.openNewRoute('/income&expenses');

@@ -1,7 +1,6 @@
 import {AuthUtils} from '../../utils/auth-utils';
 import {HttpUtils} from '../../utils/http-utils';
-import {LoginResponseType} from "../../types/login-response.type";
-
+import {LoginResponse} from "../../interfaces/login-response.interface";
 
 export class Login {
     readonly openNewRoute: (url: string | URL) => Promise<void>;
@@ -56,7 +55,7 @@ export class Login {
             this.commonErrorElement.style.display = 'none';
         }
         if (this.validateForm() && this.emailElement && this.passwordElement && this.rememberMeElement) {
-            const result: LoginResponseType = await HttpUtils.request('/login', 'POST', false, {
+            const result: LoginResponse = await HttpUtils.request('/login', 'POST', false, {
                 email: this.emailElement.value,
                 password: this.passwordElement.value,
                 rememberMe: this.rememberMeElement.checked,

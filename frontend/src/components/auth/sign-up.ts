@@ -1,7 +1,6 @@
 import {AuthUtils} from "../../utils/auth-utils";
 import {HttpUtils} from"../../utils/http-utils";
-import {SignupResponseType} from "../../types/signup-response.type";
-
+import {SignupResponse} from "../../interfaces/signup-response.interface";
 
 export class SignUp {
     readonly openNewRoute: (url: string | URL) => Promise<void>;
@@ -86,7 +85,7 @@ export class SignUp {
 
     async signUp(): Promise<void> {
         if(this.validateForm() && this.nameElement && this.lastNameElement && this.emailElement && this.passwordElement && this.passwordRepeatElement) {
-            const result: SignupResponseType = await HttpUtils.request('/signup', 'POST', false, {
+            const result: SignupResponse = await HttpUtils.request('/signup', 'POST', false, {
                 name: this.nameElement.value,
                 lastName: this.lastNameElement.value,
                 email: this.emailElement.value,

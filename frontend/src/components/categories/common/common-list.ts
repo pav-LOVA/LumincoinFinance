@@ -1,5 +1,6 @@
 import {HttpUtils} from "../../../utils/http-utils";
-import {OperationResponseType} from "../../../types/operation-response.type";
+import {OperationResponse} from "../../../interfaces/operation-response.interface";
+import {ApiResponse} from "../../../interfaces/api-response.interface";
 
 export class CommonList {
     readonly openNewRoute: (url: string | URL) => Promise<void>;
@@ -65,11 +66,11 @@ export class CommonList {
             recordsElement.innerHTML = '';
         }
 
-        const result = await HttpUtils.request(url);
+        const result: ApiResponse = await HttpUtils.request(url) as ApiResponse;
         if (result.redirect) {
             return this.openNewRoute(result.redirect);
         }
-        if (result.error || !result.response || (result.response && result.response.error)) {
+        if (result.error || !result.response) {
             return alert('Возникла ошибка, обратитесь в поддержку');
         }
         this.showRecords(result.response);
@@ -133,7 +134,7 @@ export class CommonList {
     }
 
     private async deleteOperation(id: number): Promise<void> {
-        const result : OperationResponseType = await HttpUtils.request('/operations/' + id, 'DELETE', true);
+        const result : OperationResponse = await HttpUtils.request('/operations/' + id, 'DELETE', true);
         if (result.error || !result.response) {
             return alert('Возникла ошибка, обратитесь в поддержку');
         }

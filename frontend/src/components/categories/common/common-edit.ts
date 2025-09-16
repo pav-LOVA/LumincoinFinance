@@ -1,9 +1,7 @@
 import {HttpUtils} from "../../../utils/http-utils";
 import {AuthUtils} from "../../../utils/auth-utils";
-import type {OperationType} from "../../../types/operation-type.type";
-import {Category} from "../../../types/category-type.type";
-import {OperationResponseType} from "../../../types/operation-response.type";
-
+import type {OperationType} from "../../../types/operation.type";
+import {Category} from "../../../types/category.type";
 
 export class CommonEdit {
     readonly openNewRoute: (url: string | URL) => Promise<void>;
@@ -70,7 +68,7 @@ export class CommonEdit {
         this.getCategories(result.response);
     }
 
-    private async getCategories(operation: OperationType): Promise<any> {
+    private async getCategories(operation: OperationType): Promise<void> {
         const result = await HttpUtils.request('/categories/' + operation.type);
         if (result.redirect) {
             return this.openNewRoute(result.redirect);
@@ -92,7 +90,6 @@ export class CommonEdit {
         if (found && this.categoryElement) {
             this.categoryElement.value = found.id;
         }
-
         this.showOperation(operation);
     }
 
@@ -150,7 +147,7 @@ export class CommonEdit {
         return isValid;
     }
 
-    private async updateOperation(e: MouseEvent): Promise<any> {
+    private async updateOperation(e: MouseEvent): Promise<void> {
         e.preventDefault();
 
         if (this.operationElement && this.amountElement && this.dateElement && this.commentElement && this.categoryElement && this.validateForm() && this.operationOriginalData) {

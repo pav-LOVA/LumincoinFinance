@@ -1,12 +1,13 @@
 import {HttpUtils} from "../../../utils/http-utils";
 import {AuthUtils} from "../../../utils/auth-utils";
-import {CategoriesResponseType, CategoryType} from "../../../types/categories.type";
+import {CategoryResponse} from "../../../interfaces/category-response.interface";
+import {CategoriesType} from "../../../types/categories.type";
 
 
 export class IncomeEdit {
     readonly openNewRoute: (url: string | URL) => Promise<void>;
     readonly incomeCategoryElement: HTMLInputElement | undefined;
-    private categoryOriginalData: CategoryType | undefined;
+    private categoryOriginalData: CategoriesType | undefined;
 
     constructor(openNewRoute: (url: string | URL) => Promise<void>) {
         this.openNewRoute = openNewRoute;
@@ -50,7 +51,7 @@ export class IncomeEdit {
         this.showCategory(result.response);
     }
 
-    private showCategory(category:CategoryType): void  {
+    private showCategory(category:CategoriesType): void  {
         if (this.incomeCategoryElement) {
             this.incomeCategoryElement.value = category.title;
         }
@@ -67,17 +68,17 @@ export class IncomeEdit {
         return isValid;
     }
 
-    private async updateCategory(e: MouseEvent) :Promise<any> {
+    private async updateCategory(e: MouseEvent) :Promise<void> {
         e.preventDefault();
 
         if (this.validateForm()) {
-            const changedData = {} as CategoryType;
+            const changedData = {} as CategoriesType;
             if(this.incomeCategoryElement && this.categoryOriginalData && this.incomeCategoryElement.value !== this.categoryOriginalData.title) {
                 changedData.title = this.incomeCategoryElement.value;
             }
 
             if(this.categoryOriginalData && Object.keys(changedData).length > 0) {
-                const result: CategoriesResponseType = await HttpUtils.request('/categories/income/' + this.categoryOriginalData.id, 'PUT', true, changedData);
+                const result: CategoryResponse = await HttpUtils.request('/categories/income/' + this.categoryOriginalData.id, 'PUT', true, changedData);
                 if (result.error || !result.response) {
                     return alert('Возникла ошибка, обратитесь в поддержку');
                 }
