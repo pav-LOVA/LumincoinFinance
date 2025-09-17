@@ -37,7 +37,7 @@ export class ExpensesEdit {
         this.getCategory(id).then();
     }
 
-    private async getCategory(id: number): Promise<any> {
+    private async getCategory(id: number): Promise<void> {
         const result = await HttpUtils.request('/categories/expense/' + id);
         if (result.redirect) {
             return this.openNewRoute(result.redirect);

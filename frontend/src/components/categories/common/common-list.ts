@@ -21,7 +21,7 @@ export class CommonList {
 
         this.getOperations();
         this.periodButtons.forEach((btn: HTMLButtonElement) => {
-            btn.addEventListener('click', (e: any):void => {
+            btn.addEventListener('click', (e: MouseEvent):void => {
                 e.preventDefault();
                 this.periodButtons.forEach((btn: HTMLButtonElement) => btn.classList.remove('active'));
                 btn.classList.add('active');
@@ -49,7 +49,7 @@ export class CommonList {
         }
     }
 
-    private async getOperations(period = 'today'): Promise<any> {
+    private async getOperations(period = 'today'): Promise<void> {
         let url: string = '/operations?period=' + period;
 
         if (period === 'interval') {

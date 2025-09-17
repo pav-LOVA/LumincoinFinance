@@ -32,7 +32,7 @@ export class ExpensesCreate {
         return isValid;
     }
 
-    private async saveCategory(e: MouseEvent): Promise<any> {
+    private async saveCategory(e: MouseEvent): Promise<void> {
         e.preventDefault();
 
         if (this.expenseCategoryElement && this.validateForm()) {

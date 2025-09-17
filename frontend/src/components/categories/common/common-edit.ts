@@ -57,7 +57,7 @@ export class CommonEdit {
         this.getOperation(id).then();
     }
 
-    private async getOperation(id:number):Promise<any> {
+    private async getOperation(id:number):Promise<void> {
         const result = await HttpUtils.request('/operations/' + id);
         if (result.error || !result.response) {
             return alert('Возникла ошибка, обратитесь в поддержку');

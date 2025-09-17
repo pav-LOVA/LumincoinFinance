@@ -3,6 +3,7 @@ import {AuthUtils} from "../../../utils/auth-utils";
 import {Category} from "../../../types/category.type";
 import {CategoryResponse} from "../../../interfaces/category-response.interface";
 import {OperationResponse} from "../../../interfaces/operation-response.interface";
+import {CategoriesType} from "../../../types/categories.type";
 
 
 export class CommonCreate {
@@ -56,11 +57,10 @@ export class CommonCreate {
         if(saveButton) {
             saveButton.addEventListener('click', this.saveOperation.bind(this));
         }
-
         this.getCategories(type);
     }
 
-    private async getCategories(type: Category): Promise<any> {
+    private async getCategories(type: Category): Promise<void> {
         const result: CategoryResponse = await HttpUtils.request('/categories/' + type);
 
         if (result.error || !result.response) {

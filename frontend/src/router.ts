@@ -199,7 +199,7 @@ export class Router {
         if (element) {
             e.preventDefault();
             const currentRoute: string = window.location.pathname;
-            const url: any = element.href.replace(window.location.origin, '');
+            const url: string = element.href.replace(window.location.origin, '');
             if (!url || (currentRoute === url.replace('#', '')) || url.startsWith('javascript:void(0)')) {
                 return;
             }
